@@ -4,11 +4,11 @@
 
     <head>
         <meta charset="utf-8" />
-        <title>{{$common_settings['site_name']}} - Admin Dashboard - Lock Screen</title>
+        <title><x-site-name></x-site-name> - Admin Dashboard - Lock Screen</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <!-- App favicon -->
-        <link rel="shortcut icon" href="{{asset($common_settings['fav_icon'])}}">
+        <x-fav-icon></x-fav-icon>
 
         <!-- App css -->
         <link href="{{asset('admin/assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
@@ -29,10 +29,10 @@
                                 <div class="card-body p-0 auth-header-box">
                                     <div class="text-center p-3">
                                         <a class="logo logo-admin">
-                                            <img src="{{asset($common_settings['logo'])}}" height="100%" alt="logo" class="auth-logo">
+                                            <x-logo></x-logo>
                                         </a>
-                                        <h4 class="mt-3 mb-1 font-weight-semibold text-dark font-18">{{$common_settings['site_name']}} Admin Panel</h4>   
-                                        <p class="text-dark  mb-0">Sign in to continue to {{$common_settings['site_name']}}.</p>  
+                                        <h4 class="mt-3 mb-1 font-weight-semibold text-dark font-18"><x-site-name></x-site-name> Admin Panel</h4>   
+                                        <p class="text-dark  mb-0">Sign in to continue to <x-site-name></x-site-name>.</p>  
                                     </div>
                                 </div>
                                 <div class="card-body p-0">
@@ -82,7 +82,7 @@
                                 </div><!--end card-body-->
                                
                                 <div class="card-body bg-light-alt text-center">
-                                    <span class="text-muted d-none d-sm-inline-block">{{$common_settings['site_name']}} © {{date('Y')}}</span>                                            
+                                    <span class="text-muted d-none d-sm-inline-block"><x-site-name></x-site-name> © {{date('Y')}}</span>                                            
                                 </div>
                             </div><!--end card-->
                         </div><!--end col-->

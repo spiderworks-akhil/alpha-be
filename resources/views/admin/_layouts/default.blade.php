@@ -4,14 +4,14 @@
 
     <head>
         <meta charset="utf-8" />
-        <title>{{$common_settings['site_name']}} - Admin</title>
+        <title><x-site-name></x-site-name> - Admin</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta content="{{config('app.name')}} - Admin" name="description" />
+        <meta content="<x-site-name></x-site-name> - Admin" name="description" />
         <meta content="" name="author" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
         <!-- App favicon -->
-        <link rel="shortcut icon" href="{{asset($common_settings['fav_icon'])}}">
+        <x-fav-icon></x-fav-icon>
 
         <link href="{{asset('admin/plugins/datatables/dataTables.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
         <!-- Responsive datatable examples -->

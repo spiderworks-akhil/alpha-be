@@ -4,8 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Setting;
-use Illuminate\Support\Facades\Cache;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,21 +22,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
-
-        $common_settings = Cache::get('settings', function () {
-            $data = [];
-            if(Schema::hasTable('settings'))
-            {
-                $settings = Setting::all();
-            
-                foreach($settings as $setting)
-                {
-                    $data[$setting->code] = $setting->value_text;
-                }
-            }
-            
-            return $data;
-        });
 
         if(request()->get('utm_source'))
         {
@@ -59,6 +43,5 @@ class AppServiceProvider extends ServiceProvider
             session()->put('gclid', request()->get('gclid'));
         }
 
-        view()->share(['common_settings'=>$common_settings]);
     }
 }

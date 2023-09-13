@@ -2,10 +2,7 @@
             <!-- LOGO -->
             <div class="brand">
                 <a href="{{route('admin.dashboard')}}" class="logo">
-                    <span>
-                        <img src="{{asset($common_settings['logo'])}}" alt="logo-small" class="logo-sm" style="width: 90%;">
-                    </span>
-                    
+                    <x-logo-sm></x-logo-sm>
                 </a>
             </div>
             

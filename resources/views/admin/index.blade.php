@@ -49,7 +49,7 @@
                                         <h6 class="mb-3 font-weight-normal text-muted">{{auth()->user()->name}} ({{auth()->user()->email}})</h6>
                                         <div id="animationSandbox">
                                             <div class="p-4 d-inline-block">
-                                                <img src="{{asset($common_settings['logo'])}}" alt="" class="center-block" style="width: 100%;">
+                                                <x-logo></x-logo>
                                             </div>                                                
                                         </div>
                                     </div>
