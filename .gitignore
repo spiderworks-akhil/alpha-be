@@ -5,6 +5,10 @@
 /public/storage
 /storage/*.key
 /vendor
+/public/uploads
+/public/robots.txt
+.htaccess
+/public/.htaccess
 .env
 .env.backup
 .env.production
