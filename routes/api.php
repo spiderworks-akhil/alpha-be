@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\http\Controllers\Apis\BlogController;
+use App\Http\Controllers\Apis\BlogController;
 
 
 /*

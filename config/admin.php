@@ -71,6 +71,10 @@ return array(
 		'blogs' => ['title', 'short_description', 'content', 'parent_id', 'featured_image_id', 'banner_image_id', 
 		'browser_title', 'meta_description', 'meta_keywords', 'bottom_description', 'og_title', 'og_description', 'og_image_id', 
 		'extra_js', 'category_id', 'is_featured', 'status', 'priority', 'published_on', 'published_by', 'seo', 'extra_data', 'faq', 'tags'],
+
+		'galleries' => ['title', 'short_description', 'content', 
+		'featured_image_id', 'banner_image_id', 'browser_title', 'meta_description', 'meta_keywords', 'bottom_description', 
+		'og_title', 'og_description', 'og_image_id', 'extra_js', 'category_id', 'is_featured', 'faq', 'priority', 'seo', 'extra_data', 'media'],
 	]
 
 );

@@ -6,7 +6,7 @@ use App\Models\BaseModel as Model;
 use App\Traits\ValidationTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Event extends Model
+class Gallery extends Model
 {
     use SoftDeletes;
     use ValidationTrait {
@@ -19,10 +19,10 @@ class Event extends Model
         $this->__validationConstruct();
     }
 
-    protected $table = 'events';
+    protected $table = 'galleries';
 
 
-    protected $fillable = array('slug', 'name', 'title', 'start_time', 'end_time', 'location', 'fees', 'short_description', 
+    protected $fillable = array('slug', 'name', 'title', 'short_description', 
     'content', 'priority', 'featured_image_id', 'banner_image_id', 'browser_title', 'meta_description', 'meta_keywords', 
     'bottom_description', 'og_title', 'og_description', 'og_image_id', 'extra_js', 'category_id', 'is_featured', 'status');
 
@@ -32,7 +32,7 @@ class Event extends Model
 
         $this->val_rules = array(
             'name' => 'required|max:250',
-            'slug' => 'required|max:250|unique:events,slug,ignoreId,id,deleted_at,NULL',
+            'slug' => 'required|max:250|unique:galleries,slug,ignoreId,id,deleted_at,NULL',
         );
     }
 
@@ -76,6 +76,6 @@ class Event extends Model
 
     public function gallery()
     {
-        return $this->hasMany('App\Models\EventMedia', 'events_id');
+        return $this->hasMany('App\Models\GalleryMedia', 'galleries_id');
     }
 }

@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\ListingController;
 use App\Http\Controllers\Admin\ListigItemController;
 use App\Http\Controllers\Admin\Auth\AuthenticateSessionOtpController;
 use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\GalleryController;
 
 $prefix = (config()->has('admin.url_prefix'))?config()->get('admin.url_prefix'):'admin';
 $middleware = (config()->has('admin.admin_middleware'))?config()->get('admin.admin_middleware'):'auth';
@@ -432,6 +433,16 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
          Route::post('tags/store', [TagController::class, 'store'])->name('admin.tags.store');
          Route::post('tags/update', [TagController::class, 'update'])->name('admin.tags.update');
          Route::get('tags/show/{id}', [TagController::class, 'show'])->name('admin.tags.show');
+
+         //gallery
+         Route::get('galleries', [GalleryController::class, 'index'])->name('admin.galleries.index');
+         Route::get('galleries/create', [GalleryController::class, 'create'])->name('admin.galleries.create');
+         Route::get('galleries/edit/{id}', [GalleryController::class, 'edit'])->name('admin.galleries.edit');
+         Route::get('galleries/destroy/{id}', [GalleryController::class, 'destroy'])->name('admin.galleries.destroy');
+         Route::get('galleries/change-status/{id}', [GalleryController::class, 'changeStatus'])->name('admin.galleries.change-status');
+         Route::post('galleries/store', [GalleryController::class, 'store'])->name('admin.galleries.store');
+         Route::post('galleries/update', [GalleryController::class, 'update'])->name('admin.galleries.update');
+         Route::get('galleries/show/{id}', [GalleryController::class, 'show'])->name('admin.galleries.show');
 	});
 
     Route::get('/{id?}', [AuthenticateSessionOtpController::class, 'create'])->name('admin.auth.login');
