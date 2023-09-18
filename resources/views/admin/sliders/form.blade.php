@@ -1,14 +1,4 @@
 @extends('admin._layouts.fileupload')
-@section('header')
-    @parent
-    <link rel="stylesheet" href="{{ asset('admin/assets/cropper/css/cropper.css')}}">
-    <link rel="stylesheet" href="{{ asset('admin/assets/cropper/css/main.css')}}">
-    <style>
-        .page-sidebar{
-            z-index: 999 !important;
-        }
-    </style>
-@endsection
 @section('content')
 <!-- Top Bar Start -->
             <div class="topbar">            
@@ -122,9 +112,6 @@
             <!-- end page content -->
 @endsection
 @section('footer')
-<script src="{{ asset('admin/assets/cropper/js/common.js')}}"></script>
-<script src="{{ asset('admin/assets/cropper/js/cropper.js')}}"></script>
-<script src="{{ asset('admin/assets/cropper/js/jquery-cropper.js')}}"></script>
 <script>
     $(function(){
         $(document).on('click', '.reorder-sliders', function(){

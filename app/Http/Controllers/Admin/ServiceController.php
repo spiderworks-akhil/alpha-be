@@ -83,6 +83,7 @@ class ServiceController extends Controller
     {
         $this->model->validate();
         $data = request()->all();
+        $data['status'] = isset($data['status'])?1:0;
         $data['is_featured'] = isset($data['is_featured'])?1:0;
         if(empty($data['priority'])){
             $last = $this->model->select('id')->orderBy('id', 'DESC')->first();
@@ -116,6 +117,7 @@ class ServiceController extends Controller
     	$id = decrypt($data['id']);
         $this->model->validate(request()->all(), $id);
          if($obj = $this->model->find($id)){
+            $data['status'] = isset($data['status'])?1:0;
             $data['is_featured'] = isset($data['is_featured'])?1:0;
             $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
             if(Config('admin.services.sections')){

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\BaseModel as Model;
 use App\Traits\ValidationTrait;
+use App\Models\Media;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FrontendPage extends Model
@@ -21,7 +22,7 @@ class FrontendPage extends Model
     
     protected $table = 'frontend_pages';
 
-     protected $fillable = array('slug', 'name', 'title', 'content', 'featured_image_id', 'banner_image_id', 'browser_title', 'meta_description', 'meta_keywords', 'top_description', 'bottom_description', 'og_title', 'og_description', 'og_image_id', 'extra_css', 'extra_js', 'status');
+     protected $fillable = array('slug', 'name', 'title', 'content', 'browser_title', 'meta_description', 'meta_keywords', 'bottom_description', 'og_title', 'og_description', 'og_image_id', 'extra_js', 'status');
 
     protected $dates = ['created_at','updated_at'];
 
@@ -38,17 +39,7 @@ class FrontendPage extends Model
 
     public function faq()
     {
-        return $this->morphMany('App\Models\FaqQuestionAnswer', 'linkable')->orderBy('display_order', 'ASC')->orderBy('created_at', 'DESC');
-    }
-
-    public function featured_image()
-    {
-    	return $this->belongsTo('App\Models\Media', 'featured_image_id');
-    }
-
-    public function banner_image()
-    {
-    	return $this->belongsTo('App\Models\Media', 'banner_image_id');
+        return $this->morphMany('App\Models\Faq', 'linkable')->orderBy('display_order', 'DESC')->orderBy('created_at', 'DESC');
     }
 
     public function og_image()
@@ -61,14 +52,28 @@ class FrontendPage extends Model
         return $this->morphOne('App\Models\MenuItem', 'linkable');
     }
 
-    public function created_user()
+    public function getContentAttribute($value)
     {
-        return $this->belongsTo('App\Models\User', 'created_by');
-    }
+        if(Config('admin.services.sections'))
+        {
+            $content = json_decode($value);
+            $output = collect($content)->map(function($item, $key){
+                
+                if (strpos($key, 'media_id') !== false) {
+                    if($item)
+                        return Media::find((int)$item);
+                    else
+                        return $item;
+                }
+                else
+                   return $item;
 
-    public function updated_user()
-    {
-        return $this->belongsTo('App\Models\User', 'updated_by');
+            });
+
+            return $output;
+            
+        }
+        return $value;
     }
 
     public function create_admin_menu()

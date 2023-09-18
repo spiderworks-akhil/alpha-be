@@ -116,7 +116,7 @@ class WebadminController extends Controller {
         $where = "email='".$email."'";
         if($id)
             $where .= " AND id != ".decrypt($id);
-        $obj = DB::table('users')
+        $obj = DB::table('admins')
                     ->whereRaw($where)
                     ->whereNull('deleted_at')
                     ->get();

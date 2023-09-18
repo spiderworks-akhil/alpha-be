@@ -63,8 +63,12 @@ class TestimonialController extends Controller
             $data['comment'] = null;
             $data['youtube_link'] = null;
         }
+        $data['status'] = isset($data['status'])?1:0;
         $data['is_featured'] = isset($data['is_featured'])?1:0;
-        $data['priority'] = !empty($data['priority'])?$data['priority']:0;
+        if(empty($data['priority'])){
+            $last = $this->model->select('id')->orderBy('id', 'DESC')->first();
+            $data['priority'] = ($last)?$last->id+1:1;
+        }
         $this->model->fill($data);
         $this->model->save();
 
@@ -91,7 +95,7 @@ class TestimonialController extends Controller
 	            $data['comment'] = null;
 	            $data['youtube_link'] = null;
 	        }
-
+            $data['status'] = isset($data['status'])?1:0;
             $data['priority'] = !empty($data['priority'])?$data['priority']:0;
             $data['is_featured'] = isset($data['is_featured'])?1:0;
             $obj->update($data);

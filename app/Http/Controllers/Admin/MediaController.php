@@ -357,7 +357,10 @@ class MediaController extends Controller
 
 		if($file = Media::find($id))
 		{
-			$file_view = View::make($this->views.'.set_file', [ 'file' => $file, 'popup_type'=>request()->popup_type, 'holder_attr'=>request()->holder_attr, 'related_id'=>request()->related_id, 'type'=>request()->type, 'title'=>request()->title, 'id' =>request()->media_id , 'display'=>request()->display]);
+			if(request()->popup_type == "set_file_simple")
+				$file_view = View::make($this->views.'.set_file_simple', [ 'file' => $file, 'popup_type'=>request()->popup_type, 'holder_attr'=>request()->holder_attr, 'type'=>request()->type, 'title'=>request()->title, 'id' =>request()->media_id]);
+			else
+				$file_view = View::make($this->views.'.set_file', [ 'file' => $file, 'popup_type'=>request()->popup_type, 'holder_attr'=>request()->holder_attr, 'related_id'=>request()->related_id, 'type'=>request()->type, 'title'=>request()->title, 'id' =>request()->media_id , 'display'=>request()->display]);
 	        $file_html = $file_view->render();
 
 	        return response()->json(['success'=>1, 'html'=>$file_html]);

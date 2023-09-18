@@ -22,7 +22,7 @@ class Gallery extends Model
     protected $table = 'galleries';
 
 
-    protected $fillable = array('slug', 'name', 'title', 'short_description', 
+    protected $fillable = array('slug', 'name', 'title', 'type', 'short_description', 
     'content', 'priority', 'featured_image_id', 'banner_image_id', 'browser_title', 'meta_description', 'meta_keywords', 
     'bottom_description', 'og_title', 'og_description', 'og_image_id', 'extra_js', 'category_id', 'is_featured', 'status');
 
@@ -51,7 +51,7 @@ class Gallery extends Model
 
     public function faq()
     {
-        return $this->morphMany('App\Models\FaqQuestionAnswer', 'linkable')->orderBy('display_order', 'ASC')->orderBy('created_at', 'DESC');
+        return $this->morphMany('App\Models\Faq', 'linkable')->orderBy('display_order', 'ASC')->orderBy('created_at', 'DESC');
     }
 
     public function featured_image()

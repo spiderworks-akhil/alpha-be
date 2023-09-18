@@ -72,6 +72,7 @@ class TeamController extends Controller
             }
         }
         $data['is_featured'] = isset($data['is_featured'])?1:0;
+        $data['status'] = isset($data['status'])?1:0;
         if(empty($data['priority'])){
             $last = $this->model->select('id')->orderBy('id', 'DESC')->first();
             $data['priority'] = ($last)?$last->id+1:1;
@@ -98,6 +99,7 @@ class TeamController extends Controller
                 }
             }
             $data['is_featured'] = isset($data['is_featured'])?1:0;
+            $data['status'] = isset($data['status'])?1:0;
             $data['priority'] = (isset($data['priority']) && $data['priority'])?$data['priority']:0;
             $obj->update($data);
 

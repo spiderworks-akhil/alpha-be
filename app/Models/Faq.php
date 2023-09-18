@@ -19,25 +19,31 @@ class Faq extends Model
         $this->__validationConstruct();
     }
 
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
     protected $table = 'faqs';
 
-    protected $fillable = array('name', 'status');
+    protected $fillable = array('question', 'answer', 'display_order', 'linkable_id', 'linkable_type');    
 
-    
+
     protected function setRules() {
 
-        $this->val_rules = array(      
+        $this->val_rules = array(
+            
         );
     }
 
     protected function setAttributes() {
-        $this->val_attributes = array(  
-            
+        $this->val_attributes = array(
+              
         );
     }
-    public function question_answers()
+
+    public function linkable()
     {
-        return $this->hasMany('App\Models\FaqQuestionAnswer', 'faq_id')->orderBy('display_order', 'ASC');
+        return $this->morphTo();
     }
-    
 }

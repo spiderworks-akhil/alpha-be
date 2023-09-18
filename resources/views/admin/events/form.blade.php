@@ -173,30 +173,7 @@
                                                     <div class="row add-multiple-image">
                                                         @if(count($obj->gallery)>0)
                                                             @foreach($obj->gallery as $key=>$item)
-                                                                @if($item->upload_type == 'Upload')
-                                                                    <div class="col-md-4 mb-2">
-                                                                        @include('admin.media.set_file', ['file'=>$item->media, 'title'=>'Event Media', 'popup_type'=>'single_image', 'type'=>'Image-Video', 'holder_attr'=>'event_medias[]', 'id'=>'event_media_edit_'.$key])
-                                                                    </div>
-                                                                @else
-                                                                    <div class="col-md-4 mb-2 youtube-item">
-                                                                        <div id="project_image_3">
-                                                                            <input type="hidden" name="youtube_url[]" value="{{$item->youtube_url}}">
-                                                                            <input type="hidden" name="youtube_preview[]" value="{{$item->youtube_preview}}">
-                                                                            <div class="thumbnail text-center">
-                                                                                <div class="card">
-                                                                                    <img src="{{$item->youtube_preview}}" class="w-100">
-                                                                                    <div class="card-body">
-                                                                                        <p class="card-text">Embed Url: {{$item->youtube_url}}</p>
-                                                                                        <hr>
-                                                                                        <div class="text-center">
-                                                                                            <a href="javascript:void(0);" class="youtube-remove ml-2"><i class="fas fa-trash"></i></a>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                @endif
+                                                                @include('admin.events.media', ['item'=>$item, 'type'=>'Image-Video'])
                                                             @endforeach
                                                         @endif
                                                         <div class="col-md-4 mb-2" id="add-new-image-wrap">
@@ -455,7 +432,7 @@
             });
         })
 
-        var idInc = 3;
+        var idInc = "{{count($obj->gallery)}}";
         $(function(){
             $(document).on('click', '#add-new-image', function(){
                 var html = $('#image-clone-holder').html();
@@ -490,8 +467,10 @@
                 }
             });
 
-            $(document).on('click', '.youtube-remove', function(){
+            $(document).on('click', '.gallery-item-remove', function(e){
+                e.preventDefault();
                 var that = $(this);
+                var delete_url = that.attr('href');
                 $.confirm({
                     title: 'Confirm!',
                     content: 'Are you sure to delete this?',
@@ -499,13 +478,31 @@
                         confirm:{
                             btnClass: 'btn-blue',
                             action: function(){
-                                that.parents('.youtube-item').remove();
+                                that.parents('.gallery-item').remove();
+                                $.get(delete_url);
                             }
                         },
                         cancel: function () {
                         },
                     }
                 });
+            })
+
+            $(document).on('click', '#gallery-media-update-form', function(){
+                if($('#galleryMediaUpdateForm #gallery-youtube-url').length){
+                    if($('#galleryMediaUpdateForm #gallery-youtube-url').val() == ""){
+                        miniweb_alert('Alert!', 'Youtube url cannot be null');
+                        return;
+                    }
+                }
+                var data = $('#galleryMediaUpdateForm').serialize();
+                $.post("{{route('admin.events.media.update')}}", data, function(response){
+                    if(typeof response.success != "undefined"){
+                        $('#gallery-item-'+response.id).replaceWith(response.html);
+                        miniweb_alert('Success!', 'Gallery successfully updated.');
+                        $(".jconfirm-closeIcon").trigger("click");
+                    }
+                })
             })
         })
         

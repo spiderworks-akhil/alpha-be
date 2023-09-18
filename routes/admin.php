@@ -227,8 +227,6 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         })->name('admin.static-pages.store');
         Route::post('static-pages/update', [StaticPageController::class, 'update'])->name('admin.static-pages.update');
         Route::get('static-pages/show/{id}', [StaticPageController::class, 'show'])->name('admin.static-pages.show');
-        Route::get('static-pages/edit-content/{id}', [StaticPageController::class, 'edit_content'])->name('admin.static-pages.edit-content');
-        Route::post('static-pages/update-content', [StaticPageController::class, 'update_content'])->name('admin.static-pages.update-content');
 
         //pages
         Route::get('/pages/edit/{id}', [PageController::class, 'edit'])->name('admin.pages.edit');
@@ -378,6 +376,9 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
          Route::post('events/store', [EventController::class, 'store'])->name('admin.events.store');
          Route::post('events/update', [EventController::class, 'update'])->name('admin.events.update');
          Route::get('events/show/{id}', [EventController::class, 'show'])->name('admin.events.show');
+         Route::get('events/media/edit/{id}/{type}', [EventController::class, 'media_edit'])->name('admin.events.media.edit');
+         Route::post('events/media/update', [EventController::class, 'media_update'])->name('admin.events.media.update');
+         Route::get('events/media/destroy/{id}', [EventController::class, 'media_destroy'])->name('admin.events.media.destroy');
 
          //partners
         Route::get('partners', [PartnerController::class, 'index'])->name('admin.partners.index');
@@ -443,6 +444,9 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
          Route::post('galleries/store', [GalleryController::class, 'store'])->name('admin.galleries.store');
          Route::post('galleries/update', [GalleryController::class, 'update'])->name('admin.galleries.update');
          Route::get('galleries/show/{id}', [GalleryController::class, 'show'])->name('admin.galleries.show');
+         Route::get('galleries/media/edit/{id}/{type}', [GalleryController::class, 'media_edit'])->name('admin.galleries.media.edit');
+         Route::post('galleries/media/update', [GalleryController::class, 'media_update'])->name('admin.galleries.media.update');
+         Route::get('galleries/media/destroy/{id}', [GalleryController::class, 'media_destroy'])->name('admin.galleries.media.destroy');
 	});
 
     Route::get('/{id?}', [AuthenticateSessionOtpController::class, 'create'])->name('admin.auth.login');

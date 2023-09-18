@@ -8,6 +8,7 @@ use App\Models\Admin;
 use App\Services\MailSettings;
 use App\Mail\Admin\RequestOtp;
 use App\Traits\ClientInfoTrait;
+use App\Events\LoginHistory;
 use Auth;
 
 class AuthenticateSessionOtpController extends Controller {
@@ -104,6 +105,7 @@ class AuthenticateSessionOtpController extends Controller {
         $admin->save();
 
         Auth::guard('admin')->login($admin);
+        event(new LoginHistory(['email'=>$admin->email], 'admin'));
 
         return redirect()->intended(route('admin.dashboard'));
 

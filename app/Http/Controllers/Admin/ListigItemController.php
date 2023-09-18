@@ -82,6 +82,7 @@ class ListigItemController extends Controller
     {
         $this->model->validate();
         $data = request()->all();
+        $data['status'] = isset($data['status'])?1:0;
         if($data['meida_type'] == 'Icon'){
             $data['media_id'] = null;
         }
@@ -92,7 +93,10 @@ class ListigItemController extends Controller
             $data['media_id'] = null;
             $data['icon'] = null;
         }
-        $data['priority'] = !empty($data['priority'])?$data['priority']:0;
+        if(empty($data['priority'])){
+            $last = $this->model->select('id')->orderBy('id', 'DESC')->first();
+            $data['priority'] = ($last)?$last->id+1:1;
+        }
         $this->model->fill($data);
         $this->model->save();
 
@@ -104,6 +108,7 @@ class ListigItemController extends Controller
         $data = request()->all();
         $id =  decrypt($data['id']);
         if($obj = $this->model->find($id)){
+            $data['status'] = isset($data['status'])?1:0;
             if($data['meida_type'] == 'Icon'){
                 $data['media_id'] = null;
             }

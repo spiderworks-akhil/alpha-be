@@ -35,7 +35,7 @@ return array(
 
 	'fields' => [
 		'pages' => ['title', 'parent_id', 'browser_title', 'meta_description', 'meta_keywords', 'bottom_description', 
-		'og_title', 'og_description', 'extra_js', 'faq', 'featured_image_id', 'banner_image_id', 'og_image_id'],
+		'og_title', 'og_description', 'extra_js', 'faq', 'featured_image_id', 'banner_image_id', 'og_image_id', 'seo', 'extra_data'],
 
 		'team' => ['department_id', 'title', 'designation', 'short_description', 'content', 'seo', 'extra_data', 'browser_title', 'meta_description', 'meta_keywords', 'bottom_description', 
 		'og_title', 'og_description', 'extra_js', 'priority', 'is_featured', 'featured_image_id', 'banner_image_id', 'og_image_id', 'facebook_link', 'twitter_link', 

@@ -78,6 +78,16 @@
                                                     </div>                                           
                                                 </div><!--end card-body-->
                                             </div><!--end card-->
+                                            @if(View::exists('admin.static_pages._partials.'.$obj->slug))
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        CONTENT
+                                                    </div>
+                                                    <div class="card-body text-center">
+                                                        @include('admin.static_pages._partials.'.$obj->slug)
+                                                    </div>
+                                                </div>
+                                            @endif
                                             <div class="card">
                                                 <div class="card-header">
                                                     SEO
@@ -169,20 +179,10 @@
                                                     </div>
                                                 </div>
                                                 <div class="card-footer text-muted">
-                                                    <a href="" class="btn btn-sm btn-soft-primary">Preview</a>
                                                     <button class="btn btn-sm btn-primary float-right">Save</button>
                                                 </div>
                                             </div>
-                                            @if(View::exists('admin.static_pages._partials.'.$obj->slug))
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        SET EXTRA CONTENT
-                                                    </div>
-                                                    <div class="card-body text-center">
-                                                        <a href="{{route('admin.static-pages.edit-content', [$obj->id])}}" class="webadmin-open-ajax-popup btn btn-sm btn-warning" title="SET EXTRA CONTENT" data-popup-size="large">SET CONTENT</a>
-                                                    </div>
-                                                </div>
-                                            @endif
+                                            
                                             @if($obj->id)
                                             <div class="card">
                                                 <div class="card-header">
@@ -193,22 +193,6 @@
                                                 </div>
                                             </div>
                                             @endif
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    Featured Image
-                                                </div>
-                                                <div class="card-body">
-                                                    @include('admin.media.set_file', ['file'=>$obj->featured_image, 'title'=>'Featured Image', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'featured_image_id'])
-                                                </div>
-                                            </div>
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    Banner Image
-                                                </div>
-                                                <div class="card-body">
-                                                    @include('admin.media.set_file', ['file'=>$obj->banner_image, 'title'=>'Banner Image', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'banner_image_id'])
-                                                </div>
-                                            </div>
                                             <div class="card">
                                                 <div class="card-header">
                                                     OG Image
@@ -230,6 +214,21 @@
             <!-- end page content -->
 @endsection
 @section('footer')
+    @if(View::exists('admin.static_pages._partials.'.$obj->slug))
+        <script src="{{asset('admin/plugins/jquery-steps/jquery.steps.min.js')}}"></script>
+        <script type="text/javascript">
+            $(function(){
+                $("#form-vertical").steps({
+                    headerTag: "h3",
+                    bodyTag: "fieldset",
+                    transitionEffect: "slideLeft",
+                    stepsOrientation: "vertical",
+                    enableAllSteps: true,
+                    enablePagination: false,
+                });
+            })
+        </script>
+    @endif
     <script type="text/javascript">
         
     </script>

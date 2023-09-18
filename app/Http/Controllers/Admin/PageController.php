@@ -109,7 +109,7 @@ class PageController extends Controller
     	$id = decrypt($data['id']);
         $this->model->validate(request()->all(), $id);
          if($obj = $this->model->find($id)){
-
+            $data['status'] = isset($data['status'])?1:0;
             $obj->update($data);
 
             return Redirect::to(route($this->route. '.edit', ['id'=>encrypt($id)]))->withSuccess('Page successfully updated!');

@@ -4,11 +4,9 @@ namespace App\Models;
 
 use App\Models\BaseModel as Model;
 use App\Traits\ValidationTrait;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LoginHistory extends Model
 {
-    use SoftDeletes;
 	use ValidationTrait {
         ValidationTrait::validate as private parent_validate;
     }
@@ -43,7 +41,7 @@ class LoginHistory extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User', 'users_id');
+        return $this->belongsTo('App\Models\Admin', 'users_id');
     }
 
 }

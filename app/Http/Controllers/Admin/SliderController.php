@@ -109,6 +109,7 @@ class SliderController extends Controller
         $data = $request->all();
         $id = decrypt($data['id']);
         if($photo_obj = SliderPhoto::find($id)){
+            $data['meta_data'] = json_encode($data['content']);
             $photo_obj->fill($data);
             $photo_obj->save();
             return Redirect::to(route($this->route. '.edit', array('id'=>encrypt($photo_obj->sliders_id))))->withSuccess('Slider successfully updated!');

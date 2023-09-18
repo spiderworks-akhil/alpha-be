@@ -660,7 +660,7 @@ function select_checked_image(el)
         });
 
         var popType = $('#media-popupType').val();
-        if(popType == 'single_image')
+        if(popType == 'single_image' || popType == 'set_file_simple')
         {
             $('.imgChked').each(function(i, e) {
                 $(this).removeClass('imgChked');

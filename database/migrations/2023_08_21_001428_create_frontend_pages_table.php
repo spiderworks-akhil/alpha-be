@@ -17,8 +17,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('title');
             $table->text('content')->nullable();
-            $table->bigInteger('featured_image_id')->nullable();
-            $table->bigInteger('banner_image_id')->nullable();
             $table->string('browser_title')->nullable();
             $table->string('og_title')->nullable();
             $table->text('meta_description')->nullable();
@@ -27,7 +25,6 @@ return new class extends Migration
             $table->text('meta_keywords')->nullable();
             $table->text('bottom_description')->nullable();
             $table->text('extra_js')->nullable();
-            $table->bigInteger('faq_id')->default(0);
             $table->boolean('status')->default(1);
             $table->bigInteger('created_by');
             $table->bigInteger('updated_by');

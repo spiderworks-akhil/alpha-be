@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\BaseController as Controller;
 use Illuminate\Http\Request;
-use App\Models\FaqQuestionAnswer;
+use App\Models\Faq;
 use Illuminate\Support\Facades\Hash;
 use View, Redirect, Validator, DB;
 
@@ -17,7 +17,7 @@ class FaqController extends Controller
         $list = new $model_type;
         $faq = $list->find($id)->faq;
 
-        $obj = new FaqQuestionAnswer;
+        $obj = new Faq;
         $obj->linkable_type = $model_type;
         $obj->linkable_id = $id;
         return view('admin.faq.index')->with('obj', $obj)->with('faq', $faq)->with('type', $type);
@@ -26,7 +26,7 @@ class FaqController extends Controller
     public function create($id, $type)
     {
         $model_type = "App\Models\\".$type;
-        $obj = new FaqQuestionAnswer;
+        $obj = new Faq;
         $obj->linkable_type = $model_type;
         $obj->linkable_id = $id;
         return view('admin.faq.form')->with('obj', $obj)->with('type', $type);
@@ -35,14 +35,16 @@ class FaqController extends Controller
     public function edit($id, $type)
     {
         $id = decrypt($id);
-        $obj = FaqQuestionAnswer::find($id);
+        $obj = Faq::find($id);
         return view('admin.faq.form')->with('obj', $obj)->with('type', $type);
     }
 
     public function store(Request $request)
     {
         $data = $request->all();
-        $obj = new FaqQuestionAnswer;
+        $last = Faq::select('id')->orderBy('id', 'DESC')->first();
+        $data['display_order'] = ($last)?$last->id+1:1;
+        $obj = new Faq;
         $obj->fill($data);
         $obj->save();
 
@@ -59,7 +61,7 @@ class FaqController extends Controller
     {
         $data = $request->all();
         $id = decrypt($data['id']);
-        if($obj = FaqQuestionAnswer::find($id)){
+        if($obj = Faq::find($id)){
             $obj->update($data);
             
             $list = new $obj->linkable_type;
@@ -77,7 +79,7 @@ class FaqController extends Controller
     public function destroy($id)
     {
         $id = decrypt($id);
-        if($obj = FaqQuestionAnswer::find($id)){
+        if($obj = Faq::find($id)){
             $obj->forceDelete();
             return response()->json(['success'=>true, 'message'=>'FAQ successfully deleted!']);
         }

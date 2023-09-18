@@ -181,7 +181,7 @@
                                                 </div>
                                             </div>
                                             @endfieldshow
-                                            @fieldshow(jobs-extra_date)
+                                            @fieldshow(jobs-extra_data)
                                             <div class="card">
                                                 <div class="card-header">
                                                     Extra Data

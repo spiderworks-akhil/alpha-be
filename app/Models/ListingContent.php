@@ -55,14 +55,4 @@ class ListingContent extends Model
         return $this->belongsTo('App\Models\Media', 'media_id');
     }
 
-    public function created_user()
-    {
-        return $this->belongsTo('App\Models\User', 'created_by');
-    }
-
-    public function updated_user()
-    {
-        return $this->belongsTo('App\Models\User', 'updated_by');
-    }
-
 }

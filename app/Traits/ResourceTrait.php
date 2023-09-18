@@ -293,6 +293,7 @@ trait ResourceTrait {
 
     public function clear_cache()
     {
+        cache()->flush();
         //Artisan::call('config:cache');
         //Artisan::call('cache:clear');
         return true;

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e83bbee2f752af1b673484e44981777",
+    "content-hash": "f42c0f9d53d1521c75887197472ba8d2",
     "packages": [
         {
             "name": "brick/math",
@@ -1118,16 +1118,16 @@
         },
         {
             "name": "haruncpi/laravel-user-activity",
-            "version": "v1.0.5",
+            "version": "v1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/haruncpi/laravel-user-activity.git",
-                "reference": "148e034aa92e02886da17c7fd6173ba960cac1af"
+                "reference": "5055fd4a03edc39a1eea8d2d1cbdef3ed007da52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/haruncpi/laravel-user-activity/zipball/148e034aa92e02886da17c7fd6173ba960cac1af",
-                "reference": "148e034aa92e02886da17c7fd6173ba960cac1af",
+                "url": "https://api.github.com/repos/haruncpi/laravel-user-activity/zipball/5055fd4a03edc39a1eea8d2d1cbdef3ed007da52",
+                "reference": "5055fd4a03edc39a1eea8d2d1cbdef3ed007da52",
                 "shasum": ""
             },
             "require": {
@@ -1164,9 +1164,9 @@
             ],
             "support": {
                 "issues": "https://github.com/haruncpi/laravel-user-activity/issues",
-                "source": "https://github.com/haruncpi/laravel-user-activity/tree/v1.0.5"
+                "source": "https://github.com/haruncpi/laravel-user-activity/tree/v1.0.6"
             },
-            "time": "2021-11-11T05:27:04+00:00"
+            "time": "2023-08-13T04:16:39+00:00"
         },
         {
             "name": "laravel/framework",
@@ -1370,16 +1370,16 @@
         },
         {
             "name": "laravel/sanctum",
-            "version": "v3.2.5",
+            "version": "v3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sanctum.git",
-                "reference": "8ebda85d59d3c414863a7f4d816ef8302faad876"
+                "reference": "338f633e6487e76b255470d3373fbc29228aa971"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sanctum/zipball/8ebda85d59d3c414863a7f4d816ef8302faad876",
-                "reference": "8ebda85d59d3c414863a7f4d816ef8302faad876",
+                "url": "https://api.github.com/repos/laravel/sanctum/zipball/338f633e6487e76b255470d3373fbc29228aa971",
+                "reference": "338f633e6487e76b255470d3373fbc29228aa971",
                 "shasum": ""
             },
             "require": {
@@ -1392,9 +1392,9 @@
             },
             "require-dev": {
                 "mockery/mockery": "^1.0",
-                "orchestra/testbench": "^7.0|^8.0",
+                "orchestra/testbench": "^7.28.2|^8.8.3",
                 "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^9.3"
+                "phpunit/phpunit": "^9.6"
             },
             "type": "library",
             "extra": {
@@ -1432,7 +1432,7 @@
                 "issues": "https://github.com/laravel/sanctum/issues",
                 "source": "https://github.com/laravel/sanctum"
             },
-            "time": "2023-05-01T19:39:51+00:00"
+            "time": "2023-09-07T15:46:33+00:00"
         },
         {
             "name": "laravel/serializable-closure",

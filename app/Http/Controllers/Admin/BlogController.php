@@ -61,6 +61,7 @@ class BlogController extends Controller
     {
         $this->model->validate();
         $data = request()->all();
+        $data['status'] = isset($data['status'])?1:0;
         $data['is_featured'] = isset($data['is_featured'])?1:0;
         $data['published_on'] = !empty($data['published_on'])?$this->parse_date_time($data['published_on']):date('Y-m-d H:i:s');
         if(empty($data['priority'])){
@@ -82,6 +83,7 @@ class BlogController extends Controller
         $id = decrypt($data['id']);
         $this->model->validate(request()->all(), $id);
          if($obj = $this->model->find($id)){
+            $data['status'] = isset($data['status'])?1:0;
             $data['is_featured'] = isset($data['is_featured'])?1:0;
             $data['published_on'] = !empty($data['published_on'])?$this->parse_date_time($data['published_on']):date('Y-m-d H:i:s');
             if($obj->update($data))

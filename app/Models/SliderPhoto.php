@@ -19,7 +19,7 @@ class SliderPhoto extends Model
      */
     protected $table = 'slider_photos';
 
-    protected $fillable = array('sliders_id', 'media_id', 'crop_data', 'title', 'sub_title', 'description', 'alt_text', 'button_text', 'button_link', 'button_link_target', 'button2_text', 'button2_link', 'button2_link_target');
+    protected $fillable = array('sliders_id', 'media_id', 'meta_data');
 
     protected $dates = ['created_at','updated_at'];
 
@@ -41,6 +41,12 @@ class SliderPhoto extends Model
 
     public function media() {
         return $this->belongsTo('App\Models\Media', 'media_id');
+    }
+
+    public function getMetaDataAttribute($value)
+    {
+        $output = json_decode($value);
+        return $output;
     }
 
 }

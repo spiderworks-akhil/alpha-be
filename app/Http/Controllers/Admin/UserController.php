@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\BaseController as Controller;
 use App\Traits\ResourceTrait;
 use Illuminate\Http\Request as HttpRequest;
-use App\Models\User;
+use App\Models\Admin;
 use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use View, Redirect, Validator, Request, DB;
@@ -20,7 +20,7 @@ class UserController extends Controller
     {
         parent::__construct();
 
-        $this->model = new User;
+        $this->model = new Admin;
         $this->route = 'admin.users';
         $this->views = 'admin.users';
 
@@ -63,7 +63,6 @@ class UserController extends Controller
         $validator = Validator::make($data, [
             'name' => 'required|max:250',
             'email' => 'required|email|unique:users,email|max:250',
-            'password' => 'required|same:confirm_password',
             'roles' => 'required'
         ]);
         if ($validator->fails()){
@@ -75,9 +74,6 @@ class UserController extends Controller
         }
         else
         {
-            $data['password'] = Hash::make($data['password']);
-            $data['created_by'] = auth()->user()->id;
-            $data['updated_by'] = auth()->user()->id;
             $this->model->fill($data);
             if($this->model->save())
             {
@@ -99,7 +95,6 @@ class UserController extends Controller
         $validator = Validator::make($data, [
             'name' => 'required|max:250',
             'email' => 'required|email|max:250|unique:users,email,'.$id,
-            'password' => 'nullable|same:confirm_password',
             'roles' => 'required'
         ]);
         if ($validator->fails()){
@@ -113,12 +108,6 @@ class UserController extends Controller
         {
             if($obj = $this->model->find($id)){
             
-                if($data['password'] != '')
-                    $data['password'] = Hash::make($data['password']);
-                else
-                    unset($data['password']);
-
-                $data['updated_by'] = auth()->user()->id;
                 if($obj->update($data))
                 {
                     DB::table('model_has_roles')->where('model_id',$id)->delete();

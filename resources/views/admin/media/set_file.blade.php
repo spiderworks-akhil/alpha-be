@@ -11,7 +11,7 @@
 				<div class="row no-gutters">
 	                <div class="col-sm-5">
 	                    @if($file->media_type == 'Image')
-					  		<a href="{{route('admin.media.show', [encrypt($file->id)])}}" class="webadmin-open-ajax-popup item-meida" title="View Image Details" data-popup-size="large"><img src="{{ asset($file->thumb_file_path) }}?ver={{time()}}"></a>
+					  		<a href="{{route('admin.media.show', [encrypt($file->id)])}}" class="webadmin-open-ajax-popup item-meida" title="View Image Details" data-popup-size="large"><img src="{{ asset($file->file_path) }}?ver={{time()}}" width="200px"></a>
 					  	@else
 					  		<a href="{{asset($file->file_path)}}" class="item-meida" target="_blank"><img src="{{ asset($file->thumb_file_path) }}"></a>
 					  	@endif
@@ -35,7 +35,7 @@
 		<div class="thumbnail text-center" >
 			<div class="card">
 			@if($file->media_type == 'Image')
-		  		<a href="{{route('admin.media.show', [encrypt($file->id)])}}" class="webadmin-open-ajax-popup item-meida" title="View Image Details" data-popup-size="large"><img src="{{ asset($file->thumb_file_path) }}?ver={{time()}}"></a>
+		  		<a href="{{route('admin.media.show', [encrypt($file->id)])}}" class="webadmin-open-ajax-popup item-meida" title="View Image Details" data-popup-size="large"><img src="{{ asset($file->file_path) }}?ver={{time()}}" width="200px"></a>
 		  	@else
 		  		<a href="{{asset($file->file_path)}}" class="item-meida" target="_blank"><img src="{{ asset($file->thumb_file_path) }}"></a>
 		  	@endif

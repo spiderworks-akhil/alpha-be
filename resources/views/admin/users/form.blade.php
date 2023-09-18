@@ -76,14 +76,6 @@
                                                                     <label for="email">Email</label>
                                                                     <input type="email" class="form-control" id="email" name="email" value="{{$obj->email}}">
                                                                 </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="password">Password</label>
-                                                                    <input type="password" class="form-control" id="password" name="password">
-                                                                </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label for="confirm_password">Confirm Password</label>
-                                                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password">
-                                                                </div>
                                                             </div>
                                                             <hr/>
                                                             <h6 class="ml-1">Roles</h6>
@@ -141,14 +133,6 @@
                     }
                   }
                 },
-                password: {
-                  required: function(element){
-                      return $("#inputId").val() =="";
-                  }
-                },
-                confirm_password: {
-                  equalTo: "#password",
-                },
               },
               messages: {
                 "name": "User name cannot be blank",
@@ -156,7 +140,6 @@
                   required: "Email address cannot be blank",
                   remote: "Email is already in use",
                 },
-                password: "Password cannot be blank",
               },
             });
 

@@ -8,7 +8,7 @@ use App\Traits\ResourceTrait;
 use App\Models\Gallery;
 use App\Models\GalleryMedia;
 use App\Models\Category;
-
+use Illuminate\Http\Request;
 use View, Redirect;
 
 class GalleryController extends Controller
@@ -61,6 +61,7 @@ class GalleryController extends Controller
         $this->model->validate();
         $data = request()->all();
         $data['is_featured'] = isset($data['is_featured'])?1:0;
+        $data['status'] = isset($data['status'])?1:0;
         if(empty($data['priority'])){
             $last = $this->model->select('id')->orderBy('id', 'DESC')->first();
             $data['priority'] = ($last)?$last->id+1:1;
@@ -101,9 +102,9 @@ class GalleryController extends Controller
         $this->model->validate(request()->all(), $id);
          if($obj = $this->model->find($id)){
             $data['is_featured'] = isset($data['is_featured'])?1:0;
+            $data['status'] = isset($data['status'])?1:0;
             if($obj->update($data))
             {
-                GalleryMedia::where('galleries_id', $obj->id)->forcedelete();
                 if(isset($data['gallery_medias']))
                     foreach ($data['gallery_medias'] as $key => $value) {
                         if(trim($value) != '')
@@ -134,6 +135,52 @@ class GalleryController extends Controller
                     ->withErrors("Ooops..Something wrong happend.Please try again.") // send back all errors to the login form
                     ->withInput(request()->all());
         }
+    }
+
+    public function media_edit($id, $type){
+        $id = decrypt($id);
+		if($file = GalleryMedia::find($id))
+		{
+			return view($this->views.'.media_form', array('file'=>$file, 'type'=>$type));
+		}
+    }
+
+    public function media_update(Request $request){
+        $data = $request->all();
+        $id = decrypt($data['gallery_media_id']);
+        if($obj = GalleryMedia::find($id)){
+            if(!empty($data['media_id']))
+            {
+                $obj->media_id = $data['media_id'];
+                if($obj->upload_type == "Youtube")
+                    $obj->youtube_preview = NULL;
+            }
+            $obj->title = $data['media_title'];
+            $obj->description = $data['media_description'];
+            $obj->save();
+
+            $type = "Image-Video";
+            if($obj->gallery->type == "Image")
+                $type = "Image";
+            elseif($obj->gallery->type == "Video")
+                $type = "Video";
+
+            $file_view = View::make($this->views.'.media', [ 'item' => $obj, 'type'=>$type]);
+            $file_html = $file_view->render();
+            return response()->json(['success'=>1, 'html'=>$file_html, 'id'=>$obj->id]);
+
+        } else {
+            return $this->redirect('notfound');
+        }
+    }
+
+    public function media_destroy($id){
+        $id = decrypt($id);
+		if($file = GalleryMedia::find($id))
+		{
+            $file->delete();
+            return response()->json(['success'=>1]);
+		}
     }
 
     

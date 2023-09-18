@@ -19,7 +19,7 @@ class EventMedia extends Model
      */
     protected $table = 'event_medias';
 
-    protected $fillable = array('events_id', 'upload_type', 'youtube_preview', 'youtube_url', 'media_id');
+    protected $fillable = array('events_id', 'upload_type', 'youtube_preview', 'youtube_url', 'media_id', 'title', 'description');
 
     protected $dates = ['created_at','updated_at'];
 

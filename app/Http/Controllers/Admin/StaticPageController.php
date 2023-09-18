@@ -38,32 +38,25 @@ class StaticPageController extends Controller
 
     protected function getSearchSettings(){}
 
-    public function edit_content($id)
+    public function update()
     {
-        if($obj = $this->model->find($id))
-        {
-            $obj->content = json_decode($obj->content);
-            return view::make($this->views . '._partials.'.$obj->slug, array('obj'=>$obj));
+    	$data = request()->all();
+    	$id = decrypt($data['id']);
+        $this->model->validate(request()->all(), $id);
+         if($obj = $this->model->find($id)){
+            $data['status'] = isset($data['status'])?1:0;
+            if(!empty($data['content'])){
+                $data['content'] = json_encode($data['content']);
+            }
+            $obj->update($data);
+
+            return Redirect::to(route($this->route. '.edit', ['id'=>encrypt($id)]))->withSuccess('Page details successfully updated!');
+        } else {
+            return Redirect::back()
+                    ->withErrors("Ooops..Something wrong happend.Please try again.") // send back all errors to the login form
+                    ->withInput(request()->all());
         }
     }
 
-    public function update_content(Request $request)
-    {
-        $data = $request->all();
-        $id = decrypt($data['id']);
-        if($obj = $this->model->find($id)){
-            if(isset($data['content']))
-            {
-                $obj->content = json_encode($data['content']);
-                $obj->save();
-            }
-            
-            return Redirect::to(route('admin.static-pages.edit', array('id'=>encrypt($obj->id))))->withSuccess('Extra content successfully saved!');
-        } else {
-            return Redirect::back()
-                        ->withErrors("Ooops..Something wrong happend.Please try again.") // send back all errors to the login form
-                        ->withInput(request()->all());
-        }
-    }
 
 }
