@@ -20,8 +20,8 @@ return new class extends Migration
             $table->dateTime('otp_sent_on')->nullable();
             $table->tinyInteger('opt_try_count')->nullable();
             $table->dateTime('account_blocked_on')->nullable();
-            $table->string('account_blocked_ip', 20)->nullable();
-            $table->string('last_login_ip_address', 20)->nullable();
+            $table->string('account_blocked_ip')->nullable();
+            $table->string('last_login_ip_address')->nullable();
             $table->boolean('status')->default(1);
             $table->bigInteger('created_by')->nullable();
             $table->bigInteger('updated_by')->nullable();

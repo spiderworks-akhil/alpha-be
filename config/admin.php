@@ -33,6 +33,10 @@ return array(
 		'sections' => true,
 	],
 
+	'pages' => [
+		'sections' => true,
+	],
+
 	'fields' => [
 		'pages' => ['title', 'parent_id', 'browser_title', 'meta_description', 'meta_keywords', 'bottom_description', 
 		'og_title', 'og_description', 'extra_js', 'faq', 'featured_image_id', 'banner_image_id', 'og_image_id', 'seo', 'extra_data'],

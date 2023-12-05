@@ -53,7 +53,7 @@ class Category extends Model
 
     public function faq()
     {
-        return $this->morphMany('App\Models\FaqQuestionAnswer', 'linkable')->orderBy('display_order', 'ASC')->orderBy('created_at', 'DESC');
+        return $this->morphMany('App\Models\Faq', 'linkable')->orderBy('display_order', 'ASC')->orderBy('created_at', 'DESC');
     }
 
     public function parent()
@@ -86,13 +86,4 @@ class Category extends Model
         return $this->hasMany('App\Models\Category', 'parent_id', 'id');
     }
 
-    public function created_user()
-    {
-        return $this->belongsTo('App\Models\User', 'created_by');
-    }
-
-    public function updated_user()
-    {
-        return $this->belongsTo('App\Models\User', 'updated_by');
-    }
 }

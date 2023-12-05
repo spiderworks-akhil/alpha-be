@@ -34,7 +34,7 @@ class AuthenticateSessionOtpController extends Controller {
 		$redurect_url = route('admin.auth.login');
 
         if(!$admin)
-            return redirect($redurect_url)->withError('This mobile number is not registered with us.');
+            return redirect($redurect_url)->withError('This email address is not registered with us.');
         else{
             if($admin->status == 0)
                 return redirect($redurect_url)->withError('This account is suspended.');
@@ -53,7 +53,7 @@ class AuthenticateSessionOtpController extends Controller {
                     }
                 }
 
-                $otp = rand(111111,999999);
+                $otp = $this->create_otp();
                 $admin->otp = $otp;
                 $admin->otp_sent_on = date('Y-m-d H:i:s');
                 $admin->save();
@@ -77,7 +77,7 @@ class AuthenticateSessionOtpController extends Controller {
         $admin = Admin::where('id', $id)->first();
 		$redurect_url = route('admin.auth.login');
         if(!$admin)
-            return redirect($redurect_url)->withError('This mobile number is not registered with us.');
+            return redirect($redurect_url)->withError('This email is not registered with us.');
 
         if($admin->status == 0)
             return redirect($redurect_url)->withError('This account is suspended.');
@@ -116,7 +116,7 @@ class AuthenticateSessionOtpController extends Controller {
         $admin = Admin::where('id', $id)->first();
 
         if(!$admin)
-            return response()->json(['errors'=>true, 'message'=>'This mobile number is not registered with us.']);
+            return response()->json(['errors'=>true, 'message'=>'This email address is not registered with us.']);
         else{
             if($admin->status == 0)
                 return response()->json(['errors'=>true, 'message'=>'This account is suspended.']);
@@ -130,7 +130,7 @@ class AuthenticateSessionOtpController extends Controller {
                     }
                 }
 
-                $otp = rand(111111,999999);
+                $otp = $this->create_otp();
                 $admin->otp = $otp;
                 $admin->otp_sent_on = date('Y-m-d H:i:s');
                 $admin->save();
@@ -141,6 +141,13 @@ class AuthenticateSessionOtpController extends Controller {
                 return response()->json(['success' => true]);
             }
         }
+    }
+
+    protected function create_otp(){
+        if(app()->env == 'production')
+            return rand(111111,999999);
+        else
+            return 123456;
     }
 
 	public function logout(Request $request){
