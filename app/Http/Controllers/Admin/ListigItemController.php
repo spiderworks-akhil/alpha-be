@@ -7,6 +7,8 @@ use App\Traits\ResourceTrait;
 
 use App\Models\Listing;
 use App\Models\ListingContent;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Redirect;
 
 class ListigItemController extends Controller
@@ -30,7 +32,7 @@ class ListigItemController extends Controller
     {
         if (request()->ajax()) {
             $collection = $this->getCollection();
-            $collection->where('listings_id', $listing_id);
+            $collection->where('listing_id', $listing_id);
             return $this->setDTData($collection)->make(true);
         } else {
             $search_settings = $this->getSearchSettings();
@@ -40,22 +42,25 @@ class ListigItemController extends Controller
     }
 
     protected function getCollection() {
-        return $this->model->select('listing_contents.id', 'listing_contents.title', 'listing_contents.meida_type', 'medias.file_path', 'listing_contents.icon', 'listing_contents.status', 'listing_contents.priority', 'listing_contents.created_at', 'listing_contents.updated_at')
+        return $this->model->select('listing_contents.*', 'medias.file_path')
                             ->leftJoin('medias', 'medias.id', '=', 'listing_contents.media_id');
     }
 
     protected function setDTData($collection) {
-        $route = $this->route;
         return $this->initDTData($collection)
-            ->editColumn('media', function($obj){
-                if($obj->meida_type == 'Icon')
-                    return $obj->icon;
-                elseif($obj->meida_type == 'Image')
+            ->editColumn('image', function($obj){
+                if($obj->file_path)
                     return '<a href="'.asset($obj->file_path).'" target="_blank"><img src="'.asset($obj->file_path).'" style="width:20px"/></a>';
                 else
                     return '';
             })
-            ->rawColumns(['action_edit', 'action_delete', 'status', 'media']);
+            ->editColumn('short_description', function($obj){
+                return Str::limit($obj->short_description, 50, ' ...');
+            })
+            ->editColumn('detailed_description', function($obj){
+                return Str::limit(strip_tags($obj->detailed_description), 50, ' ...');
+            })
+            ->rawColumns(['action_edit', 'action_delete', 'status', 'image']);
     }
 
     public function create($listing_id)
@@ -69,7 +74,7 @@ class ListigItemController extends Controller
     public function edit($id) {
         $id =  decrypt($id);
         if($obj = $this->model->find($id)){
-            $listing = Listing::find($obj->listings_id);
+            $listing = Listing::find($obj->listing_id);
             return view($this->views . '.form')->with('obj', $obj)->with('listing', $listing);
         } else {
             return $this->redirect('notfound');
@@ -78,58 +83,15 @@ class ListigItemController extends Controller
 
     protected function getSearchSettings(){}
 
-    public function store()
+    public function store(Request $request)
     {
-        $this->model->validate();
-        $data = request()->all();
-        $data['status'] = isset($data['status'])?1:0;
-        if($data['meida_type'] == 'Icon'){
-            $data['media_id'] = null;
-        }
-        elseif($data['meida_type'] == 'Image'){
-            $data['icon'] = null;
-        }
-        else{
-            $data['media_id'] = null;
-            $data['icon'] = null;
-        }
-        if(empty($data['priority'])){
-            $last = $this->model->select('id')->orderBy('id', 'DESC')->first();
-            $data['priority'] = ($last)?$last->id+1:1;
-        }
-        $this->model->fill($data);
-        $this->model->save();
-
-        return Redirect::to(route($this->route. '.edit', ['id'=> encrypt($this->model->id)]))->withSuccess('Listing item successfully saved!');
+        return $this->_store($request->all());
     }
 
-    public function update()
+    public function update(Request $request)
     {
-        $data = request()->all();
-        $id =  decrypt($data['id']);
-        if($obj = $this->model->find($id)){
-            $data['status'] = isset($data['status'])?1:0;
-            if($data['meida_type'] == 'Icon'){
-                $data['media_id'] = null;
-            }
-            elseif($data['meida_type'] == 'Image'){
-                $data['icon'] = null;
-            }
-            else{
-                $data['media_id'] = null;
-                $data['icon'] = null;
-            }
-
-            $data['priority'] = !empty($data['priority'])?$data['priority']:0;
-            $obj->update($data);
-            return Redirect::to(route($this->route. '.edit', ['id'=>encrypt($id)]))->withSuccess('Listig successfully updated!');
-        }
-        else 
-        {
-            return Redirect::back()
-                    ->withErrors("Ooops..Something wrong happend.Please try again.") // send back all errors to the login form
-                    ->withInput(request()->all());
-        }       
+        $id = decrypt($request->id);
+        return $this->_update($id, $request->all());
     }
 
 }

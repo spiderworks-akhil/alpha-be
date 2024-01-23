@@ -2,8 +2,8 @@
 
 namespace App\Traits;
 
-use View, Request, DataTables, Form, Redirect, Artisan;
-use Illuminate\Http\Exception\HttpResponseException;
+use View, Request, DataTables, Redirect;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request as HttpRequest;
 
 trait ResourceTrait {
@@ -66,38 +66,54 @@ trait ResourceTrait {
             ->orderColumn('date', function ($query, $order) {
                      $query->orderBy('updated_at', $order);
             })
-            ->editColumn('status', function($obj) use($route) { 
-                if($obj->status == 1)
-                {
-                    if(auth()->user()->can($this->permissions['edit']))
-                        return '<a href="' . route($route.'.change-status', [encrypt($obj->id)]).'" class="webadmin-btn-warning-popup" data-message="Are you sure, want to disable this record?"><i class="h5 text-success fa fa-check-circle"></i></a>'; 
-                    else
-                        return '<i class="h5 text-success fa fa-check-circle"></i>';
+            ->editColumn('status', function($obj) use($route) {
+                if(Route::has($route.'.change-status')){
+                    if($obj->status == 1)
+                    {
+                        if(auth()->user()->can($this->permissions['edit']))
+                            return '<a href="' . route($route.'.change-status', [encrypt($obj->id)]).'" class="webadmin-btn-warning-popup" data-message="Are you sure, want to disable this record?"><i class="h5 text-success fa fa-check-circle"></i></a>'; 
+                        else
+                            return '<i class="h5 text-success fa fa-check-circle"></i>';
+                    }
+                    else{
+                        if(auth()->user()->can($this->permissions['edit']))
+                            return '<a href="' . route($route.'.change-status', [encrypt($obj->id)]) . '" class="webadmin-btn-warning-popup" data-message="Are you sure, want to enable this record?"><i class="h5 text-danger fa fa-times-circle"></i></a>';
+                        else
+                            return '<i class="h5 text-danger fa fa-times-circle"></i>';
+                    }
                 }
-                else{
-                    if(auth()->user()->can($this->permissions['edit']))
-                        return '<a href="' . route($route.'.change-status', [encrypt($obj->id)]) . '" class="webadmin-btn-warning-popup" data-message="Are you sure, want to enable this record?"><i class="h5 text-danger fa fa-times-circle"></i></a>';
-                    else
-                        return '<i class="h5 text-danger fa fa-times-circle"></i>';
-                }
-            })
-            ->addColumn('action_edit', function($obj) use ($route, $queries) { 
-                if(auth()->user()->can($this->permissions['edit']))
-                    return '<a href="'.route($route.'.edit', [encrypt($obj->id)]).'" class="text-info" title="' . ($obj->updated_at ? 'Last updated at : ' . date('d/m/Y - h:i a', strtotime($obj->updated_at)) : ''). '" ><i class="fa fa-pencil-alt"></i></a>';
                 else
-                    return '<a href="'.route($route.'.show', [encrypt($obj->id)]).'" class="text-info webadmin-open-ajax-popup" data-popup-size="large" title="View '.$obj->name.'" ><i class="fas fa-eye"></i></a>';
+                    return "";
+            })
+            ->addColumn('action_edit', function($obj) use ($route) {
+                if(Route::has($route.'.edit') || Route::has($route.'.show')){ 
+                    if(auth()->user()->can($this->permissions['edit']))
+                        return '<a href="'.route($route.'.edit', [encrypt($obj->id)]).'" class="text-info" title="' . ($obj->updated_at ? 'Last updated at : ' . date('d/m/Y - h:i a', strtotime($obj->updated_at)) : ''). '" ><i class="fa fa-pencil-alt"></i></a>';
+                    else
+                        return '<a href="'.route($route.'.show', [encrypt($obj->id)]).'" class="text-info webadmin-open-ajax-popup" data-popup-size="large" title="View '.$obj->name.'" ><i class="fas fa-eye"></i></a>';
+                }
+                else
+                    return "";
             })
             ->addColumn('action_ajax_edit', function($obj) use ($route) {
-                if(auth()->user()->can($this->permissions['edit']))
-                    return '<a href="'.route($route.'.edit', [encrypt($obj->id)]).'" class="text-info webadmin-open-ajax-popup" title="Edt '.$obj->name.'" ><i class="fa fa-pencil-alt"></i></a>';
+                if(Route::has($route.'.edit') || Route::has($route.'.show')){
+                    if(auth()->user()->can($this->permissions['edit']))
+                        return '<a href="'.route($route.'.edit', [encrypt($obj->id)]).'" class="text-info webadmin-open-ajax-popup" title="Edt '.$obj->name.'" ><i class="fa fa-pencil-alt"></i></a>';
+                    else
+                        return '<a href="'.route($route.'.show', [encrypt($obj->id)]).'" class="text-info webadmin-open-ajax-popup" title="' . ($obj->updated_at ? 'Last updated at : ' . date('d/m/Y - h:i a', strtotime($obj->updated_at)) : ''). '" ><i class="fas fa-eye"></i></a>';
+                }
                 else
-                    return '<a href="'.route($route.'.show', [encrypt($obj->id)]).'" class="text-info webadmin-open-ajax-popup" title="' . ($obj->updated_at ? 'Last updated at : ' . date('d/m/Y - h:i a', strtotime($obj->updated_at)) : ''). '" ><i class="fas fa-eye"></i></a>';
+                    return "";
             })
-            ->addColumn('action_delete', function($obj) use ($route, $queries) { 
-                if(auth()->user()->can($this->permissions['delete']))
-                    return '<a href="'.route($route.'.destroy', [encrypt($obj->id)]).'" class="text-danger webadmin-btn-warning-popup" data-message="Are you sure to delete?  Associated data will be removed if it is deleted." title="' . ($obj->updated_at ? 'Last updated at : ' . date('d/m/Y - h:i a', strtotime($obj->updated_at)) : '') . '"><i class="fa fa-trash"></i></a>';
+            ->addColumn('action_delete', function($obj) use ($route) {
+                if(Route::has($route.'.destroy')){
+                    if(auth()->user()->can($this->permissions['delete']))
+                        return '<a href="'.route($route.'.destroy', [encrypt($obj->id)]).'" class="text-danger webadmin-btn-warning-popup" data-message="Are you sure to delete?  Associated data will be removed if it is deleted." title="' . ($obj->updated_at ? 'Last updated at : ' . date('d/m/Y - h:i a', strtotime($obj->updated_at)) : '') . '"><i class="fa fa-trash"></i></a>';
+                    else
+                        return '<a href="javascript:void(0)" class="text-secondary" title="You have no permission to delete" ><i class="fa fa-trash"></i></a>';
+                }
                 else
-                    return '<a href="javascript:void(0)" class="text-secondary" title="You have no permission to delete" ><i class="fa fa-trash"></i></a>';
+                    return "";
             });
 	}
 
@@ -135,12 +151,7 @@ trait ResourceTrait {
 	protected function _store($data)
 	{
         $data['is_featured'] = isset($data['is_featured'])?1:0;
-        if(empty($data['priority'])){
-            $last = $this->model->select('id')->orderBy('id', 'DESC')->first();
-            $data['priority'] = ($last)?$last->id+1:1;
-        }
-        else
-            $data['priority'] = 0;
+        $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
             
 		$this->model->fill($data);
 		$this->model->save();

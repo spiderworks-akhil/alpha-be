@@ -28,7 +28,7 @@
                             <div class="page-title-box">
                                 <div class="row">
                                     <div class="col">
-                                        <h4 class="page-title">All Listing Items of {{$listing->listing_name}}</h4>
+                                        <h4 class="page-title">All Listing Items of {{$listing->name}}</h4>
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Admin</a></li>
                                             <li class="breadcrumb-item"><a href="{{route('admin.listings.index')}}">Listings</a></li>
@@ -56,8 +56,11 @@
                                         <tr>
                                             <th class="nodisplay"></th>
                                             <th class="table-width-10">ID</th>
-                                            <th class="table-width-10">Media</th>
-                                            <th class="table-width-120">Title</th>
+                                            <th class="table-width-10 @if($listing->image == 'No') nodisplay @endif">Image</th>
+                                            <th class="table-width-10 @if($listing->icon == 'No') nodisplay @endif">Icon</th>
+                                            <th class="table-width-120 @if($listing->title == 'No') nodisplay @endif">Title</th>
+                                            <th class="table-width-120 @if($listing->short_description == 'No') nodisplay @endif">Short Description</th>
+                                            <th class="table-width-120 @if($listing->detailed_description == 'No') nodisplay @endif">Detailed Description</th>
                                             <th class="table-width-120">Last Updated On</th>
                                             <th class="nosearch table-width-10 text-center">Priority</th>
                                             <th class="nosort nosearch table-width-10">Status</th>
@@ -89,8 +92,11 @@
         var my_columns = [
             {data: 'updated_at', name: 'updated_at'},
             {data: null, name: 'id'},
-            {data: 'media', name: 'media'},
+            {data: 'image', name: 'image'},
+            {data: 'icon', name: 'icon'},
             {data: 'title', name: 'title'},
+            {data: 'short_description', name: 'short_description'},
+            {data: 'detailed_description', name: 'detailed_description'},
             {data: 'date', name: 'updated_at'},
             {data: 'priority', name: 'priority', className: 'text-center'},
             {data: 'status', name: 'status'},

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\BaseController as Controller;
+use App\Http\Requests\Admin\GalleryRequest;
 use App\Traits\ResourceTrait;
 
 use App\Models\Gallery;
 use App\Models\GalleryMedia;
 use App\Models\Category;
+use App\Models\Media;
 use Illuminate\Http\Request;
 use View, Redirect;
 
@@ -43,7 +45,7 @@ class GalleryController extends Controller
     public function create()
     {
         $categories = Category::where('parent_id',0)->where('category_type', 'Gallery')->get();
-        return view::make($this->views . '.form', array('obj'=>$this->model, 'categories'=>$categories));
+        return View::make($this->views . '.form', array('obj'=>$this->model, 'categories'=>$categories));
     }
 
     public function edit($id) {
@@ -56,77 +58,69 @@ class GalleryController extends Controller
         }
     }
 
-    public function store()
+    public function store(GalleryRequest $request)
     {
-        $this->model->validate();
+        $request->validated();
         $data = request()->all();
         $data['is_featured'] = isset($data['is_featured'])?1:0;
         $data['status'] = isset($data['status'])?1:0;
-        if(empty($data['priority'])){
-            $last = $this->model->select('id')->orderBy('id', 'DESC')->first();
-            $data['priority'] = ($last)?$last->id+1:1;
-        }
+        $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
         $this->model->fill($data);
         if($this->model->save())
         {
-            if(isset($data['gallery_medias']))
-                foreach ($data['gallery_medias'] as $key => $value) {
-                    if(trim($value) != '')
-                    {
-                        $event_media = new GalleryMedia;
-                        $event_media->upload_type = 'Upload';
-                        $event_media->media_id = $value;
-                        $this->model->gallery()->save($event_media);
-                    }
-                }
-
-            if(isset($data['youtube_url']))
-                foreach ($data['youtube_url'] as $key => $value) {
-                    if(trim($value) != '')
-                    {
-                        $event_media = new GalleryMedia;
-                        $event_media->upload_type = 'Youtube';
-                        $event_media->youtube_url = $value;
-                        $event_media->youtube_preview = $data['youtube_preview'][$key];
-                        $this->model->gallery()->save($event_media);
-                    }
-                }
+            $this->saveGalleryMedia($this->model, $data);
+            $this->saveYoutube($this->model, $data);
         }
         return Redirect::to(route($this->route. '.edit', ['id'=> encrypt($this->model->id)]))->withSuccess('Gallery successfully saved!');
     }
 
-    public function update()
+    protected function saveGalleryMedia($gallery, $data){
+        if(isset($data['gallery_medias'])){
+            foreach ($data['gallery_medias'] as $key => $value) {
+                if(trim($value) != '')
+                {
+                    $media = Media::find($value);
+                    if($media){
+                        $gallery_media = new GalleryMedia;
+                        $gallery_media->upload_type = 'Upload';
+                        $gallery_media->media_id = $value;
+                        if($media->media_type == 'Video')
+                            $gallery_media->video_preview_image = $media->thumb_file_path;
+                        $gallery->gallery()->save($gallery_media);
+                    }
+                }
+            }
+        }
+    }
+
+    protected function saveYoutube($gallery, $data){
+        if(isset($data['youtube_url'])){
+            foreach ($data['youtube_url'] as $key => $value) {
+                if(trim($value) != '')
+                {
+                    $gallery_media = new GalleryMedia;
+                    $gallery_media->upload_type = 'Youtube';
+                    $gallery_media->youtube_url = $value;
+                    $gallery_media->youtube_preview = $data['youtube_preview'][$key];
+                    $gallery->gallery()->save($gallery_media);
+                }
+            }
+        }
+    }
+
+    public function update(GalleryRequest $request)
     {
+        $request->validated();
         $data = request()->all();
         $id = decrypt($data['id']);
-        $this->model->validate(request()->all(), $id);
          if($obj = $this->model->find($id)){
             $data['is_featured'] = isset($data['is_featured'])?1:0;
             $data['status'] = isset($data['status'])?1:0;
+            $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
             if($obj->update($data))
             {
-                if(isset($data['gallery_medias']))
-                    foreach ($data['gallery_medias'] as $key => $value) {
-                        if(trim($value) != '')
-                        {
-                            $event_media = new GalleryMedia;
-                            $event_media->upload_type = 'Upload';
-                            $event_media->media_id = $value;
-                            $obj->gallery()->save($event_media);
-                        }
-                    }
-
-                if(isset($data['youtube_url']))
-                    foreach ($data['youtube_url'] as $key => $value) {
-                        if(trim($value) != '')
-                        {
-                            $event_media = new GalleryMedia;
-                            $event_media->upload_type = 'Youtube';
-                            $event_media->youtube_url = $value;
-                            $event_media->youtube_preview = $data['youtube_preview'][$key];
-                            $obj->gallery()->save($event_media);
-                        }
-                    }
+                $this->saveGalleryMedia($obj, $data);
+                $this->saveYoutube($obj, $data);
             }
 
             return Redirect::to(route($this->route. '.edit', ['id'=>encrypt($id)]))->withSuccess('Gallery successfully updated!');
@@ -155,6 +149,14 @@ class GalleryController extends Controller
                 if($obj->upload_type == "Youtube")
                     $obj->youtube_preview = NULL;
             }
+
+            if($request->file('video_cover') && $request->file('video_cover')->isValid()){
+                $upload = $this->uploadCover($request->file('video_cover'));
+                if($upload['success']) {
+                    $obj->video_preview_image = 'uploads/media/cover/'.$upload['filename'];
+                }
+            }
+
             $obj->title = $data['media_title'];
             $obj->description = $data['media_description'];
             $obj->save();

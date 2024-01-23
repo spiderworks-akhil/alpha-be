@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('listings', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('listing_name');
+            $table->string('name');
+            $table->enum('title', array('Yes','No'))->default('No');
+            $table->enum('short_description', array('Yes','No'))->default('No');
+            $table->enum('detailed_description', array('Yes','No'))->default('No');
+            $table->enum('icon', array('Yes','No'))->default('No');
+            $table->enum('image', array('Yes','No'))->default('No');
             $table->bigInteger('created_by');
             $table->bigInteger('updated_by');
             $table->dateTime('created_at');
@@ -23,12 +28,12 @@ return new class extends Migration
 
         Schema::create('listing_contents', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('listings_id');
-            $table->enum('meida_type', array('Image','Icon'))->nullable();
+            $table->bigInteger('listing_id');
             $table->bigInteger('media_id')->nullable();
             $table->string('icon')->nullable();
             $table->string('title')->nullable();
-            $table->text('description')->nullable();
+            $table->mediumText('short_description')->nullable();
+            $table->text('detailed_description')->nullable();
             $table->integer('priority')->default(0);
             $table->boolean('status')->default(1);
             $table->bigInteger('created_by');

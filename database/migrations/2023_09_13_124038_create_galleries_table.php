@@ -47,6 +47,7 @@ return new class extends Migration
             $table->string('youtube_preview')->nullable();
             $table->string('youtube_url')->nullable();
             $table->bigInteger('media_id')->nullable();
+            $table->string('video_preview_image')->nullable();
             $table->string('title')->nullable();
             $table->text('description')->nullable();
             $table->bigInteger('created_by');

@@ -3,53 +3,29 @@
 namespace App\Models;
 
 use App\Models\BaseModel as Model;
-use App\Traits\ValidationTrait;
 use App\Models\Media;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FrontendPage extends Model
 {
     use SoftDeletes;
-    use ValidationTrait {
-        ValidationTrait::validate as private parent_validate;
-    }
-    
-    public function __construct() {
-        
-        parent::__construct();
-        $this->__validationConstruct();
-    }
     
     protected $table = 'frontend_pages';
 
-     protected $fillable = array('slug', 'name', 'title', 'content', 'browser_title', 'meta_description', 'meta_keywords', 'bottom_description', 'og_title', 'og_description', 'og_image_id', 'extra_js', 'status');
+    protected $guarded = ['id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at'];
 
     protected $dates = ['created_at','updated_at'];
 
-    protected function setRules() {
-
-        $this->val_rules = array(
-        );
-    }
-
-    protected function setAttributes() {
-        $this->val_attributes = array(
-        );
-    }
-
-    public function faq()
+    public function faq(): MorphMany
     {
-        return $this->morphMany('App\Models\Faq', 'linkable')->orderBy('display_order', 'DESC')->orderBy('created_at', 'DESC');
+        return $this->morphMany(Faq::class, 'linkable')->orderBy('display_order', 'DESC')->orderBy('created_at', 'DESC');
     }
 
-    public function og_image()
+    public function menu(): MorphOne
     {
-    	return $this->belongsTo('App\Models\Media', 'og_image_id');
-    }
-
-    public function menu()
-    {
-        return $this->morphOne('App\Models\MenuItem', 'linkable');
+        return $this->morphOne(MenuItem::class, 'linkable');
     }
 
     public function getContentAttribute($value)
@@ -62,6 +38,12 @@ class FrontendPage extends Model
                 if (strpos($key, 'media_id') !== false) {
                     if($item)
                         return Media::find((int)$item);
+                    else
+                        return $item;
+                }
+                elseif(strpos($key, 'listing_id') !== false){
+                    if($item)
+                        return Listing::with(['list', 'list.media'])->find((int)$item);
                     else
                         return $item;
                 }

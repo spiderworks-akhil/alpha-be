@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\JobApplicationController;
 use App\Http\Controllers\Admin\ListingController;
 use App\Http\Controllers\Admin\ListigItemController;
 use App\Http\Controllers\Admin\Auth\AuthenticateSessionOtpController;
+use App\Http\Controllers\Admin\AuthorController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\GalleryController;
 
@@ -48,6 +49,10 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
     Route::post('/logout', [AuthenticateSessionOtpController::class, 'logout'])->name('admin.auth.logout');
 
     Route::get('validation/unique-slug', [WebadminController::class, 'unique_slug'])->name('admin.unique-slug');
+
+    Route::get('select2/tags', [WebadminController::class, 'select2_tags'])->name('admin.select2.tags');
+    Route::get('select2/listings', [WebadminController::class, 'select2_listings'])->name('admin.select2.listings');
+    Route::get('select2/authors', [WebadminController::class, 'select2_authors'])->name('admin.select2.authors');
 
 	Route::group(['middleware' => $middleware], function(){
 		Route::get('/dashboard', [WebadminController::class, 'index'])->name('admin.dashboard');
@@ -212,19 +217,7 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
 
         //static pages
         Route::get('static-pages', [StaticPageController::class, 'index'])->name('admin.static-pages.index');
-        Route::get('static-pages/create', function(){
-            echo "No access permission";exit;
-        })->name('admin.static-pages.create');
         Route::get('static-pages/edit/{id}', [StaticPageController::class, 'edit'])->name('admin.static-pages.edit');
-        Route::get('static-pages/destroy/{id}', function(){
-            echo "No access permission";exit;
-        })->name('admin.static-pages.destroy');
-        Route::get('static-pages/change-status/{id}', function(){
-            echo "No access permission";exit;
-        })->name('admin.static-pages.change-status');
-        Route::post('static-pages/store', function(){
-            echo "No access permission";exit;
-        })->name('admin.static-pages.store');
         Route::post('static-pages/update', [StaticPageController::class, 'update'])->name('admin.static-pages.update');
         Route::get('static-pages/show/{id}', [StaticPageController::class, 'show'])->name('admin.static-pages.show');
 
@@ -261,6 +254,7 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::get('team/change-status/{id}', [TeamController::class, 'changeStatus'])->name('admin.team.change-status');
         Route::post('team/store', [TeamController::class, 'store'])->name('admin.team.store');
         Route::post('team/update', [TeamController::class, 'update'])->name('admin.team.update');
+        Route::get('team/show/{id}', [TeamController::class, 'show'])->name('admin.team.show');
 
         //services
         Route::get('/services/edit/{id}', [ServiceController::class, 'edit'])->name('admin.services.edit');
@@ -447,6 +441,16 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
          Route::get('galleries/media/edit/{id}/{type}', [GalleryController::class, 'media_edit'])->name('admin.galleries.media.edit');
          Route::post('galleries/media/update', [GalleryController::class, 'media_update'])->name('admin.galleries.media.update');
          Route::get('galleries/media/destroy/{id}', [GalleryController::class, 'media_destroy'])->name('admin.galleries.media.destroy');
+
+         //authors
+        Route::get('authors', [AuthorController::class, 'index'])->name('admin.authors.index');
+        Route::get('authors/create', [AuthorController::class, 'create'])->name('admin.authors.create');
+        Route::get('authors/edit/{id}/{tab?}', [AuthorController::class, 'edit'])->name('admin.authors.edit');
+        Route::get('authors/destroy/{id}', [AuthorController::class, 'destroy'])->name('admin.authors.destroy');
+        Route::get('authors/change-status/{id}', [AuthorController::class, 'changeStatus'])->name('admin.authors.change-status');
+        Route::post('authors/store', [AuthorController::class, 'store'])->name('admin.authors.store');
+        Route::post('authors/update', [AuthorController::class, 'update'])->name('admin.authors.update');
+        Route::get('authors/show/{id}', [AuthorController::class, 'show'])->name('admin.authors.show');
 	});
 
     Route::get('/{id?}', [AuthenticateSessionOtpController::class, 'create'])->name('admin.auth.login');

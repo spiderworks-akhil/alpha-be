@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\BaseController as Controller;
+use App\Http\Requests\Admin\TagRequest;
 use App\Traits\ResourceTrait;
-
 use App\Models\Tag;
-
-use Illuminate\Http\Request;
-use View, Redirect, Config;
 
 class TagController extends Controller
 {
@@ -38,5 +35,18 @@ class TagController extends Controller
     }
 
     protected function getSearchSettings(){}
+
+    public function store(TagRequest $request)
+    {
+        $request->validated();
+        return $this->_store($request->all());
+    }
+
+    public function update(TagRequest $request)
+    {
+        $request->validated();
+        $id = decrypt($request->id);
+        return $this->_update($id, $request->all());
+    }
 
 }

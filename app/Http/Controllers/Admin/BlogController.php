@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\BaseController as Controller;
+use App\Http\Requests\Admin\BlogRequest;
 use App\Traits\ResourceTrait;
 
 use App\Models\Blog;
@@ -57,17 +58,14 @@ class BlogController extends Controller
         }
     }
 
-    public function store()
+    public function store(BlogRequest $request)
     {
-        $this->model->validate();
+        $request->validated();
         $data = request()->all();
         $data['status'] = isset($data['status'])?1:0;
         $data['is_featured'] = isset($data['is_featured'])?1:0;
         $data['published_on'] = !empty($data['published_on'])?$this->parse_date_time($data['published_on']):date('Y-m-d H:i:s');
-        if(empty($data['priority'])){
-            $last = $this->model->select('id')->orderBy('id', 'DESC')->first();
-            $data['priority'] = ($last)?$last->id+1:1;
-        }
+        $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
         $this->model->fill($data);
         if($this->model->save())
         {
@@ -77,15 +75,16 @@ class BlogController extends Controller
         return Redirect::to(route($this->route. '.edit', ['id'=> encrypt($this->model->id)]))->withSuccess('Blog successfully saved!');
     }
 
-    public function update()
+    public function update(BlogRequest $request)
     {
+        $request->validated();
         $data = request()->all();
         $id = decrypt($data['id']);
-        $this->model->validate(request()->all(), $id);
          if($obj = $this->model->find($id)){
             $data['status'] = isset($data['status'])?1:0;
             $data['is_featured'] = isset($data['is_featured'])?1:0;
             $data['published_on'] = !empty($data['published_on'])?$this->parse_date_time($data['published_on']):date('Y-m-d H:i:s');
+            $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
             if($obj->update($data))
             {
                 if(!empty($data['tags']))

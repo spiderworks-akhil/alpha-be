@@ -86,7 +86,7 @@
         var my_columns = [
             {data: 'updated_at', name: 'updated_at'},
             {data: null, name: 'id'},
-            {data: 'listing_name', name: 'listing_name'},
+            {data: 'name', name: 'name'},
             {data: 'date', name: 'updated_at'},
             {data: 'list', name: 'list'},
             {data: 'action_edit', name: 'action_edit'},
@@ -100,10 +100,10 @@
                 $('#inputForm').validate({
                     ignore: [],
                     rules: {
-                        listing_name: "required",
+                        name: "required",
                     },
                     messages: {
-                        listing_name: "Name cannot be blank",
+                        name: "Name cannot be blank",
                     },
                 });
             }

@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\BaseController as Controller;
+use App\Http\Requests\Admin\TeamRequest;
 use App\Traits\ResourceTrait;
-
-use Illuminate\Http\Request as HttpRequest;
-
 use App\Models\Team;
 use App\Models\Department;
-use View,Redirect, DB;
+use Redirect;
 
 class TeamController extends Controller
 {
@@ -56,59 +54,38 @@ class TeamController extends Controller
         }
     }
 
-    public function store(HttpRequest $r)
+    public function store(TeamRequest $request)
     {
-        $data = $r->all();
-        $this->model->validate();
+        $request->validated();
+        $data = $request->all();
 
         if($data['department_id'])
-        {
-            $department = Department::find($data['department_id']);
-            if(!$department){
-                $new_department = New Department;
-                $new_department->name = $data['department_id'];
-                $new_department->save();
-                $data['department_id'] = $new_department->id;
-            }
-        }
-        $data['is_featured'] = isset($data['is_featured'])?1:0;
-        $data['status'] = isset($data['status'])?1:0;
-        if(empty($data['priority'])){
-            $last = $this->model->select('id')->orderBy('id', 'DESC')->first();
-            $data['priority'] = ($last)?$last->id+1:1;
-        }
-        $this->model->fill($data);
-        $this->model->save();
-        return Redirect::to(route($this->route.'.edit', array('id'=>encrypt($this->model->id))))->withSuccess('Team member successfully saved!'); 
+            $data['department_id'] = $this->saveDepartment($data['department_id']);
+
+        return $this->_store($data);
     }
 
-    public function update(HttpRequest $r)
+    protected function saveDepartment($department_id)
     {
-        $data = $r->all();
-        $id = decrypt($data['id']);
-        $this->model->validate($data, $id);
-        if($obj = $this->model->find($id)){
-            if($data['department_id'])
-            {
-                $department = Department::find($data['department_id']);
-                if(!$department){
-                    $new_department = New Department;
-                    $new_department->name = $data['department_id'];
-                    $new_department->save();
-                    $data['department_id'] = $new_department->id;
-                }
-            }
-            $data['is_featured'] = isset($data['is_featured'])?1:0;
-            $data['status'] = isset($data['status'])?1:0;
-            $data['priority'] = (isset($data['priority']) && $data['priority'])?$data['priority']:0;
-            $obj->update($data);
-
-            return Redirect::to(route($this->route.'.edit', array('id'=>encrypt($obj->id))))->withSuccess('Team member details successfully updated!');
-        } else {
-            return Redirect::back()
-                        ->withErrors("Ooops..Something wrong happend.Please try again.") // send back all errors to the login form
-                        ->withInput(Input::all());
+        $department = Department::find($department_id);
+        if(!$department){
+            $new_department = New Department;
+            $new_department->name = $department_id;
+            $new_department->save();
+            return $new_department->id;
         }
+        else
+            return $department->id;
+    }
+
+    public function update(TeamRequest $request)
+    {
+        $request->validated();
+        $data = $request->all();
+        $id = decrypt($data['id']);
+        if($data['department_id'])
+            $data['department_id'] = $this->saveDepartment($data['department_id']);
+        return $this->_update($id, $data);
     }
 
 }

@@ -10,6 +10,10 @@
                                 <label for="name">Name: </label>
                                 <b>{{$obj->name}}</b>
                             </div>
+                            <div class="form-group col-md-6">
+                                <label for="name">Guard: </label>
+                                <b>{{$obj->guard_name}}</b>
+                            </div>
                         </div>
                         <hr class="mt-0" />
                         <h6 class="ml-1">Permissions</h6>

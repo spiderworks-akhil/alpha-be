@@ -263,6 +263,12 @@ $(function(){
                 $.alert(result.message);
                 obj.prop('disabled', false).text('Save');
                 initiate_editor();
+                $('#accordionExample').sortable({
+                    axis: 'y',
+                    update: function (event, ui) {
+                        save_order();
+                    }
+                });
             })
         }
     });
@@ -892,3 +898,11 @@ jQuery.fn.ForceNumericOnly = function()
                 })
             })
         }
+
+        var loadFile = function(event) {
+            var output = document.getElementById('video-cover-image');
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function() {
+            URL.revokeObjectURL(output.src) // free memory
+            }
+        };

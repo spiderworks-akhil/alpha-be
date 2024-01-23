@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\BaseController as Controller;
 use Illuminate\Http\Request;
 use App\Models\Faq;
-use Illuminate\Support\Facades\Hash;
-use View, Redirect, Validator, DB;
+use DB;
 
 class FaqController extends Controller
 {
@@ -92,7 +91,7 @@ class FaqController extends Controller
         $data = $request->all();
         $order = $data['ids'];
         foreach ($order as $key => $value) {
-            DB::table('faq_question_answers')->where('id', $value)->update(['display_order' => $key]);
+            DB::table('faqs')->where('id', $value)->update(['display_order' => $key]);
         }
         $response = response()->json(['success'=>'Faqs successfully re-ordered!']);
         return $response;

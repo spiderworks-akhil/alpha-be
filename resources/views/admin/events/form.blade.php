@@ -172,8 +172,11 @@
                                                 <div class="card-body">
                                                     <div class="row add-multiple-image">
                                                         @if(count($obj->gallery)>0)
+                                                            @php
+                                                                $media_type = "Image-Video";
+                                                            @endphp
                                                             @foreach($obj->gallery as $key=>$item)
-                                                                @include('admin.events.media', ['item'=>$item, 'type'=>'Image-Video'])
+                                                                @include('admin.events.media', ['item'=>$item, 'type'=>$media_type])
                                                             @endforeach
                                                         @endif
                                                         <div class="col-md-4 mb-2" id="add-new-image-wrap">
@@ -495,15 +498,28 @@
                         return;
                     }
                 }
-                var data = $('#galleryMediaUpdateForm').serialize();
-                $.post("{{route('admin.events.media.update')}}", data, function(response){
-                    if(typeof response.success != "undefined"){
-                        $('#gallery-item-'+response.id).replaceWith(response.html);
-                        miniweb_alert('Success!', 'Gallery successfully updated.');
-                        $(".jconfirm-closeIcon").trigger("click");
+                var postData = new FormData( $('#galleryMediaUpdateForm')[0] );
+                $.ajax({
+                    url : "{{route('admin.events.media.update')}}",
+                    type: "POST",
+                    data : postData,
+                    processData: false,
+                    contentType: false,
+                    success:function(response, textStatus, jqXHR){
+                        if(typeof response.success != "undefined"){
+                            $('#gallery-item-'+response.id).replaceWith(response.html);
+                            miniweb_alert('Success!', 'Gallery successfully updated.');
+                            $(".jconfirm-closeIcon").trigger("click");
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        //if fails     
                     }
-                })
+                });
             })
+
+
+            
         })
         
         var validator = $('#InputFrm').validate({

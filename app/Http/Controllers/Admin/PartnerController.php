@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\BaseController as Controller;
+use App\Http\Requests\Admin\PartnerRequest;
 use App\Traits\ResourceTrait;
-
 use App\Models\Partner;
-
-use Illuminate\Http\Request;
-use View, Redirect, Config;
 
 class PartnerController extends Controller
 {
@@ -38,5 +35,18 @@ class PartnerController extends Controller
     }
 
     protected function getSearchSettings(){}
+
+    public function store(PartnerRequest $request)
+    {
+        $request->validated();
+        return $this->_store($request->all());
+    }
+
+    public function update(PartnerRequest $request)
+    {
+        $request->validated();
+        $id = decrypt($request->id);
+        return $this->_update($id, $request->all());
+    }
 
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Schema, Auth;
 use Haruncpi\LaravelUserActivity\Traits\Loggable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BaseModel extends Model {
     use Loggable;
@@ -31,14 +32,38 @@ class BaseModel extends Model {
         return with(new static)->getTable();
     }
 
-    public function created_user() {
-        if (isset($this->attributes['created_by'])) return $this->belongsTo('App\Models\Admin', 'created_by');
+    public function created_user(): ?BelongsTo
+    {
+        if ($this->checkColumn('created_by')) return $this->belongsTo(Admin::class, 'created_by');
         return null;
     }
 
-    public function updated_user() {
-        if (isset($this->attributes['updated_by'])) return $this->belongsTo('App\Models\Admin', 'updated_by');
+    public function updated_user(): ?BelongsTo
+    {
+        if ($this->checkColumn('updated_by')) return $this->belongsTo(Admin::class, 'updated_by');
         return null;
+    }
+
+    public function featured_image(): ?BelongsTo
+    {
+        if ($this->checkColumn('featured_image_id')) return $this->belongsTo(Media::class, 'featured_image_id');
+        return null;
+    }
+
+    public function banner_image(): ?BelongsTo
+    {
+        if ($this->checkColumn('banner_image_id')) return $this->belongsTo(Media::class, 'banner_image_id');
+        return null;
+    }
+
+    public function og_image(): ?BelongsTo
+    {
+        if ($this->checkColumn('og_image_id')) return $this->belongsTo(Media::class, 'og_image_id');
+        return null;
+    }
+
+    protected function checkColumn($column){
+        return Schema::hasColumn(static::getTableName(), $column);
     }
 
 }

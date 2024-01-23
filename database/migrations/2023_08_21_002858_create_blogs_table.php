@@ -33,7 +33,7 @@ return new class extends Migration
             $table->boolean('is_featured')->default(0);
             $table->boolean('status')->default(1);
             $table->dateTime('published_on');
-            $table->string('published_by')->nullable();
+            $table->bigInteger('published_by_author_id')->nullable();
             $table->bigInteger('created_by');
             $table->bigInteger('updated_by');
             $table->dateTime('created_at');

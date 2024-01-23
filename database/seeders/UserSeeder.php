@@ -79,7 +79,7 @@ class UserSeeder extends Seeder
             ['id' => 41, 'name' => 'site_settings', 'route' => 'admin.settings.index', 'guard_name' => 'admin', 'public' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['id' => 42, 'name' => 'log_listings', 'route' => 'admin.logs.index', 'guard_name' => 'admin', 'public' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['id' => 43, 'name' => 'log_deleting', 'route' => 'admin.logs.destroy', 'guard_name' => 'admin', 'public' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
-            ['id' => 44, 'name' => 'static_page_listing', 'route' => 'admin.static-pages.index', 'guard_name' => 'admin', 'public' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['id' => 44, 'name' => 'static_pages_listing', 'route' => 'admin.static-pages.index', 'guard_name' => 'admin', 'public' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['id' => 45, 'name' => 'static_pages_editing', 'route' => 'admin.static-pages.edit', 'guard_name' => 'admin', 'public' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['id' => 46, 'name' => 'page_adding', 'route' => 'admin.pages.create', 'guard_name' => 'admin', 'public' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['id' => 47, 'name' => 'page_listing', 'route' => 'admin.pages.index', 'guard_name' => 'admin', 'public' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
@@ -130,6 +130,10 @@ class UserSeeder extends Seeder
             ['id' => 96, 'name' => 'tag_adding', 'route' => 'admin.tags.create', 'guard_name' => 'admin', 'public' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['id' => 97, 'name' => 'tag_editing', 'route' => 'admin.tags.edit', 'guard_name' => 'admin', 'public' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['id' => 98, 'name' => 'tag_deleting', 'route' => 'admin.tags.destroy', 'guard_name' => 'admin', 'public' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['id' => 99, 'name' => 'author_listing', 'route' => 'admin.authors.index', 'guard_name' => 'admin', 'public' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['id' => 100, 'name' => 'author_adding', 'route' => 'admin.authors.create', 'guard_name' => 'admin', 'public' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['id' => 101, 'name' => 'author_editing', 'route' => 'admin.authors.edit', 'guard_name' => 'admin', 'public' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['id' => 102, 'name' => 'author_deleting', 'route' => 'admin.authors.destroy', 'guard_name' => 'admin', 'public' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
         ];
 
         DB::table('permissions')->insert($permissions);
@@ -229,6 +233,10 @@ class UserSeeder extends Seeder
             ['permission_id' => 96, 'role_id' => 1],
             ['permission_id' => 97, 'role_id' => 1],
             ['permission_id' => 98, 'role_id' => 1],
+            ['permission_id' => 99, 'role_id' => 1],
+            ['permission_id' => 100, 'role_id' => 1],
+            ['permission_id' => 101, 'role_id' => 1],
+            ['permission_id' => 102, 'role_id' => 1],
         ];
 
         DB::table('role_has_permissions')->insert($role_has_permissions);
@@ -263,6 +271,7 @@ class UserSeeder extends Seeder
             ['id' => 45, 'permissions_id' => 90, 'name' => 'Widgets', 'parent_id'=> 0, 'icon' => '<i class="fas fa-atlas"></i>', 'display_order' => 0, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['id' => 46, 'permissions_id' => 91, 'name' => 'Listings', 'parent_id'=> 0, 'icon' => '<i class="fas fa-list"></i>', 'display_order' => 0, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['id' => 47, 'permissions_id' => 95, 'name' => 'Tags', 'parent_id'=> 0, 'icon' => '<i class="fas fa-tags"></i>', 'display_order' => 0, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['id' => 48, 'permissions_id' => 99, 'name' => 'Authors', 'parent_id'=> 0, 'icon' => '<i class="fas fa-users"></i>', 'display_order' => 0, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
         ];
 
         DB::table('admin_links')->insert($admin_links);

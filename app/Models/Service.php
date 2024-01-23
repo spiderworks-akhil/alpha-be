@@ -3,85 +3,42 @@
 namespace App\Models;
 
 use App\Models\BaseModel as Model;
-use App\Traits\ValidationTrait;
 use App\Models\Media;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Config;
 
 class Service extends Model
 {
     use SoftDeletes;
-    use ValidationTrait {
-        ValidationTrait::validate as private parent_validate;
-    }
-
-    public function __construct() {
-        
-        parent::__construct();
-        $this->__validationConstruct();
-    }
 
     protected $table = 'services';
 
 
-    protected $fillable = array('slug', 'name', 'title', 'content', 'parent_id', 'featured_image_id', 'banner_image_id', 'browser_title', 'meta_description', 'meta_keywords', 'top_description', 'bottom_description', 'og_title', 'og_description', 'og_image_id', 'extra_css', 'extra_js', 'priority', 'is_featured', 'status');
+    protected $guarded = ['id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at'];
 
     protected $dates = ['created_at','updated_at'];
 
-    protected function setRules() {
-
-        $this->val_rules = array(
-            'name' => 'required|max:250',
-            'slug' => 'required|max:250|unique:services,slug,ignoreId,id,deleted_at,NULL',
-        );
-    }
-
-    protected function setAttributes() {
-        $this->val_attributes = array(
-        );
-    }
-
-    public function validate($data = null, $ignoreId = 'NULL') {
-        if( isset($this->val_rules['slug']) )
-        {
-            $this->val_rules['slug'] = str_replace('ignoreId', $ignoreId, $this->val_rules['slug']);
-        }
-        return $this->parent_validate($data);
-    }
-
-    public function faq()
+    public function faq(): MorphMany
     {
-        return $this->morphMany('App\Models\Faq', 'linkable')->orderBy('display_order', 'DESC')->orderBy('created_at', 'DESC');
+        return $this->morphMany(Faq::class, 'linkable')->orderBy('display_order', 'DESC')->orderBy('created_at', 'DESC');
     }
 
-    public function featured_image()
+    public function menu(): MorphOne
     {
-    	return $this->belongsTo('App\Models\Media', 'featured_image_id');
+        return $this->morphOne(MenuItem::class, 'linkable');
     }
 
-    public function banner_image()
+    public function parent(): BelongsTo
     {
-    	return $this->belongsTo('App\Models\Media', 'banner_image_id');
+        return $this->belongsTo(Service::class, 'parent_id');
     }
 
-    public function og_image()
+    public function children(): HasMany
     {
-    	return $this->belongsTo('App\Models\Media', 'og_image_id');
-    }
-
-    public function menu()
-    {
-        return $this->morphOne('App\Models\MenuItem', 'linkable');
-    }
-
-    public function parent()
-    {
-        return $this->belongsTo('App\Models\Page', 'parent_id');
-    }
-
-    public function children()
-    {
-        return $this->hasMany('App\Models\Page', 'parent_id', 'id');
+        return $this->hasMany(Service::class, 'parent_id', 'id');
     }
 
     public function getContentAttribute($value)

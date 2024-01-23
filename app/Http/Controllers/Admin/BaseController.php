@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Routing\Controller;
 use Image, File AS FileInput, DB, Auth;
-use Spiderworks\Webadmin\Models\Media;
+use App\Models\Media;
 
 class BaseController extends Controller {
 

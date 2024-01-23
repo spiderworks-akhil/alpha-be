@@ -14,6 +14,12 @@ class GalleryMedia extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'upload_type' => $this->upload_type,
+            'youtube_preview' => $this->youtube_preview,
+            'youtube_url' => $this->youtube_url,
+            'media' => new Media($this->media)
+        ];
     }
 }

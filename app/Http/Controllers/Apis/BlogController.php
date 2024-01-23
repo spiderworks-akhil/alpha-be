@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Blog;
 use App\Models\Category;
 use App\Http\Resources\Blog as BlogResource;
-use App\Http\Resources\BlogCollection;
+use App\Http\Resources\BlogListingCollection;
 use App\Http\Resources\CategoryCollection;
 
 class BlogController extends Controller
@@ -21,7 +21,7 @@ class BlogController extends Controller
                 $blogs->whereIn('category_id', $data['categories']);
             }
             $blogs = $blogs->orderBy('published_on', 'DESC')->paginate($limit);
-            return new BlogCollection($blogs);
+            return new BlogListingCollection($blogs);
         }
         catch(\Exception $e){
             return response()->json(['error' => $e->getMessage()], 500);
@@ -44,6 +44,9 @@ class BlogController extends Controller
             $blog = Blog::with(['featured_image', 'banner_image', 'og_image', 'category', 'tags'])->where('slug', $slug)->where('status', 1)->first();
             if(!$blog)
                 return response()->json(['error' => 'Not found'], 404);
+
+            $category_id = $blog->category_id;
+            $blog->related_blogs = Blog::with(['featured_image', 'tags'])->where('category_id', $category_id)->where('id', '!=', $blog->id)->orderBy('published_on', 'DESC')->take(5)->get();
             return new BlogResource($blog);
         }
         catch(\Exception $e){

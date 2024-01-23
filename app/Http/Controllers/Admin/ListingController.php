@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\BaseController as Controller;
+use App\Http\Requests\Admin\ListRequest;
 use App\Traits\ResourceTrait;
 
 use App\Models\Listing;
@@ -25,7 +26,7 @@ class ListingController extends Controller
     }
     
     protected function getCollection() {
-        return $this->model->select('id', 'listing_name', 'created_at', 'updated_at');
+        return $this->model->select('id', 'name', 'created_at', 'updated_at');
     }
 
     protected function setDTData($collection) {
@@ -35,11 +36,27 @@ class ListingController extends Controller
                 return '<a href="'.route('admin.listing-items.index', [$obj->id]).'" class="text-success" title="Listings" target="_blank" ><i class="fas fa-list"></i></i></a>';
             })
             ->addColumn('action_edit', function($obj) use ($route) { 
-                return '<a href="'.route($route.'.edit', [encrypt($obj->id)]).'" class="text-info webadmin-open-ajax-popup" title="Update Listing" ><i class="fa fa-pencil-alt"></i></a>';
+                if(auth()->user()->can($this->permissions['edit']))
+                    return '<a href="'.route($route.'.edit', [encrypt($obj->id)]).'" class="text-info webadmin-open-ajax-popup" title="Update Listing" ><i class="fa fa-pencil-alt"></i></a>';
+                else
+                    return '<a href="'.route($route.'.show', [encrypt($obj->id)]).'" class="text-info webadmin-open-ajax-popup" data-popup-size="large" title="View '.$obj->name.'" ><i class="fas fa-eye"></i></a>';
             })
             ->rawColumns(['action_edit', 'action_delete', 'list']);
     }
 
     protected function getSearchSettings(){}
+
+    public function store(ListRequest $request)
+    {
+        $request->validated();
+        return $this->_store($request->all());
+    }
+
+    public function update(ListRequest $request)
+    {
+        $request->validated();
+        $id = decrypt($request->id);
+        return $this->_update($id, $request->all());
+    }
 
 }

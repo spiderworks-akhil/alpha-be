@@ -7,7 +7,7 @@
                     data-popup-size="large"><img src="{{ asset($item->media->file_path) }}?ver={{time()}}" width="200px"></a>
                 @else
                     <a href="{{route('admin.media.show', [encrypt($item->media->id)])}}" class="webadmin-open-ajax-popup item-meida" title="View Vide Details" 
-                    data-popup-size="large"><img src="{{ asset($item->media->thumb_file_path) }}"></a>
+                    data-popup-size="large"><img src="{{ asset($item->video_preview_image) }}"></a>
                 @endif
                 <div class="card-body">
                     <p class="card-text">File: {{$item->media->file_name}}</p>
@@ -43,6 +43,6 @@
                             </div>
                         </div>
                     </div>
-            </div>
+                </div>
     </div>
 @endif

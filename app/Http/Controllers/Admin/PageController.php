@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\BaseController as Controller;
+use App\Http\Requests\Admin\PageRequest;
 use App\Traits\ResourceTrait;
-
 use App\Models\Page;
-
 use Illuminate\Http\Request;
-use View, Redirect;
+use View;
 
 class PageController extends Controller
 {
@@ -21,7 +20,6 @@ class PageController extends Controller
         $this->model = new Page;
         $this->route .= '.pages';
         $this->views .= '.pages';
-
         $this->permissions = ['list'=>'page_listing', 'create'=>'page_adding', 'edit'=>'page_editing', 'delete'=>'page_deleting'];
         $this->resourceConstruct();
 
@@ -40,7 +38,7 @@ class PageController extends Controller
             if($parent)
                 $parent_data = $this->model->find($parent);
             $search_settings = $this->getSearchSettings();
-            return view::make($this->views . '.index', array('parent'=>$parent, 'parent_data'=>$parent_data, 'search_settings'=>$search_settings));
+            return View::make($this->views . '.index', array('parent'=>$parent, 'parent_data'=>$parent_data, 'search_settings'=>$search_settings));
         }
     }
     
@@ -55,15 +53,19 @@ class PageController extends Controller
                 $has_child = $this->model->where('parent_id', '=', $obj->id)->count();
                 return '<a href="' . route( $route . '.index',  [$obj->id] ) . '" class="btn btn-info btn-sm" >Sub-Pages (' . $has_child . ')</a>'; 
             })
-            ->addColumn('action_delete_category', function($obj) use ($route) { 
-                $has_child = $this->model->where('parent_id', '=', $obj->id)->count();
-                if($has_child)
-                {
-                    return '<a href="javascript:void(0);" class= "text-danger delete_have_child" title="Created at : ' . date('d/m/Y - h:i a', strtotime($obj->created_at)) . '" > <i class="fa fa-trash"></i></button>';
+            ->addColumn('action_delete_category', function($obj) use ($route) {
+                if(auth()->user()->can($this->permissions['delete'])){
+                    $has_child = $this->model->where('parent_id', '=', $obj->id)->count();
+                    if($has_child)
+                    {
+                        return '<a href="javascript:void(0);" class= "text-danger delete_have_child" title="Created at : ' . date('d/m/Y - h:i a', strtotime($obj->created_at)) . '" > <i class="fa fa-trash"></i></button>';
+                    }
+                    else{
+                        return '<a href="' . route( $route . '.destroy',  [encrypt($obj->id)] ) . '" class="text-danger webadmin-btn-warning-popup" data-message="Are you sure to delete?  Associated data will be removed if it is deleted." title="' . ($obj->updated_at ? 'Last updated at : ' . date('d/m/Y - h:i a', strtotime($obj->updated_at)) : '') . '" ><i class="fa fa-trash"></i></a>';  
+                    }
                 }
-                else{
-                     return '<a href="' . route( $route . '.destroy',  [encrypt($obj->id)] ) . '" class="text-danger webadmin-btn-warning-popup" data-message="Are you sure to delete?  Associated data will be removed if it is deleted." title="' . ($obj->updated_at ? 'Last updated at : ' . date('d/m/Y - h:i a', strtotime($obj->updated_at)) : '') . '" ><i class="fa fa-trash"></i></a>';  
-                }
+                else
+                    return '<a href="javascript:void(0)" class="text-secondary" title="You have no permission to delete" ><i class="fa fa-trash"></i></a>';
             })
             ->rawColumns(['action_edit', 'action_delete_category', 'status', 'sub-pages']);
     }
@@ -76,17 +78,13 @@ class PageController extends Controller
         if($parent)
             $parent_data = $this->model->find($parent);
         $pages = $this->model->where('parent_id',0)->get();
-        return view::make($this->views . '.form', array('obj'=>$this->model, 'parent'=>$parent, 'parent_data'=>$parent_data, 'pages'=>$pages));
+        return View::make($this->views . '.form', array('obj'=>$this->model, 'parent'=>$parent, 'parent_data'=>$parent_data, 'pages'=>$pages));
     }
 
-    public function store()
+    public function store(PageRequest $request)
     {
-        $this->model->validate();
-        $data = request()->all();
-
-        $this->model->fill($data);
-        $this->model->save();
-        return Redirect::to(route($this->route. '.edit', ['id'=> encrypt($this->model->id)]))->withSuccess('Page successfully saved!');
+        $request->validated();
+        return $this->_store($request->all());
     }
 
     public function edit($id) {
@@ -103,20 +101,10 @@ class PageController extends Controller
         }
     }
 
-    public function update()
+    public function update(PageRequest $request)
     {
-    	$data = request()->all();
-    	$id = decrypt($data['id']);
-        $this->model->validate(request()->all(), $id);
-         if($obj = $this->model->find($id)){
-            $data['status'] = isset($data['status'])?1:0;
-            $obj->update($data);
-
-            return Redirect::to(route($this->route. '.edit', ['id'=>encrypt($id)]))->withSuccess('Page successfully updated!');
-        } else {
-            return Redirect::back()
-                    ->withErrors("Ooops..Something wrong happend.Please try again.") // send back all errors to the login form
-                    ->withInput(request()->all());
-        }
+        $request->validated();
+    	$id = decrypt($request->id);
+        return $this->_update($id, $request->all());
     }
 }

@@ -89,6 +89,39 @@ class WebadminController extends Controller {
         return \Response::json($json);
     }
 
+    public function select2_listings(Request $request)
+    {
+        $items = DB::table('listings')->where('name', 'like', $request->q.'%')->orderBy('name')
+            ->get();
+        $json = [];
+        foreach($items as $c){
+            $json[] = ['id'=>$c->id, 'text'=>$c->name];
+        }
+        return \Response::json($json);
+    }
+
+    public function select2_tags(Request $request)
+    {
+        $items = DB::table('tags')->where('name', 'like', $request->q.'%')->orderBy('name')
+            ->get();
+        $json = [];
+        foreach($items as $c){
+            $json[] = ['id'=>$c->id, 'text'=>$c->name];
+        }
+        return \Response::json($json);
+    }
+
+    public function select2_authors(Request $request)
+    {
+        $items = DB::table('authors')->where('name', 'like', $request->q.'%')->orderBy('name')
+            ->get();
+        $json = [];
+        foreach($items as $c){
+            $json[] = ['id'=>$c->id, 'text'=>$c->name];
+        }
+        return \Response::json($json);
+    }
+
     public function unique_roles(Request $request)
     {
         $id = $request->id;

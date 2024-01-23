@@ -44,12 +44,12 @@
                                         @if($obj->id)
                                             <h4 class="page-title">Edit Listing Item</h4>
                                         @else
-                                            <h4 class="page-title">Create new Listig Item</h4>
+                                            <h4 class="page-title">Create new Listing Item</h4>
                                         @endif
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Admin</a></li>
                                             <li class="breadcrumb-item"><a href="{{route('admin.listings.index')}}">Listings</a></li>
-                                            <li class="breadcrumb-item"><a href="{{ route($route.'.index', [$listing->id]) }}">All Listing Items of {{$listing->listing_name}}</a></li>
+                                            <li class="breadcrumb-item"><a href="{{ route($route.'.index', [$listing->id]) }}">All Listing Items of {{$listing->name}}</a></li>
                                             <li class="breadcrumb-item active">@if($obj->id)Edit @else Create new @endif Listig Item</li>
                                         </ol>
                                     </div><!--end col-->
@@ -74,7 +74,7 @@
                                     @endif
                                     @csrf
                                     <input type="hidden" name="id" @if($obj->id) value="{{encrypt($obj->id)}}" @endif id="inputId">
-                                    <input type="hidden" name="listings_id" value="{{$listing->id}}" />
+                                    <input type="hidden" name="listing_id" value="{{$listing->id}}" />
                                     <div class="row">
                                         <div class="col-md-8">
                                             <div class="card">
@@ -84,30 +84,36 @@
                                                 <div class="card-body">
                                                     <div data-simplebar>
                                                         <div class="row m-0">
+                                                            @if($listing->title == "Yes")
                                                             <div class="form-group col-md-12">
                                                                 <label>Title</label>
                                                                 <input type="text" name="title" class="form-control" value="{{$obj->title}}">
                                                             </div>
+                                                            @endif
+                                                            @if($listing->icon == "Yes")
                                                             <div class="form-group col-md-12">
-                                                                <label>Media Type</label>
-                                                                <select name="meida_type" class="w-100 webadmin-select2-input" id="type-select">
-                                                                    <option value=""></option>
-                                                                    <option value="Icon" @if($obj->meida_type == 'Icon') selected="selected" @endif>Icon</option>
-                                                                    <option value="Image" @if($obj->meida_type == 'Image') selected="selected" @endif>Image</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group col-md-12" id="icon-div" @if(!$obj->meida_type || $obj->meida_type == 'Image') style="display:none;" @endif>
                                                                 <label>Icon</label>
                                                                 <textarea class="form-control" name="icon">{{$obj->icon}}</textarea>
                                                             </div>
-                                                            <div class="form-group col-md-12" id="image-div" @if(!$obj->meida_type || $obj->meida_type == 'Icon') style="display:none;" @endif>
+                                                            @endif
+                                                            @if($listing->image == "Yes")
+                                                            <div class="form-group col-md-12" >
                                                                 <label>Image</label>
                                                                 @include('admin.media.set_file', ['file'=>$obj->media, 'title'=>'Media Files', 'popup_type'=>'single_image', 'type'=>'Image', 'holder_attr'=>'media_id'])
                                                             </div>
+                                                            @endif
+                                                            @if($listing->short_description == "Yes")
                                                             <div class="form-group col-md-12">
-                                                                <label>Description</label>
-                                                                <textarea class="form-control" name="description">{{$obj->description}}</textarea>
+                                                                <label>Short Description</label>
+                                                                <textarea class="form-control" name="short_description">{{$obj->short_description}}</textarea>
                                                             </div>
+                                                            @endif
+                                                            @if($listing->detailed_description == "Yes")
+                                                            <div class="form-group col-md-12">
+                                                                <label>Detailed Description</label>
+                                                                <textarea class="form-control editor" name="detailed_description">{{$obj->detailed_description}}</textarea>
+                                                            </div>
+                                                            @endif
                                                         </div>
                                                     </div>                                           
                                                 </div><!--end card-body-->
@@ -189,36 +195,6 @@
             <!-- end page content -->
 @endsection
 @section('footer')
-    <script type="text/javascript">
-        var validator = $('#InputFrm').validate({
-              rules: 
-              {
-                "title": "required",
-              },
-              messages: 
-              {
-                "title": "Tile cannot be blank",
-              },
-        });
 
-        $(document).ready(function(){
-            $('#type-select').change(function(){
-                if($(this).val() == 'Icon')
-                {
-                    $('#icon-div').show();
-                    $('#image-div').hide();
-                }
-                else if($(this).val() == 'Image')
-                {   
-                    $('#icon-div').hide();
-                    $('#image-div').show();
-                }
-                else{
-                    $('#icon-div').hide();
-                    $('#image-div').hide();
-                }
-            })
-        })
-    </script>
 @parent
 @endsection

@@ -6,26 +6,47 @@
                 <div class="tab-content chat-list" id="pills-tabContent" >
                     <div class="tab-pane fade show active" id="tab1">
                         <div class="row m-0">
-                            <div class="form-group col-md-6">
-                                <label for="name">Name: </label>
-                                <b>{{$obj->name}}</b>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="email">Email: </label>
-                                <b>{{$obj->email}}</b>
-                            </div>
-                        </div>
-                        <hr class="mt-0" />
-                        <h6 class="ml-1">Roles</h6>
-                        <hr/>
-                        <div class="row m-0">
-                            @foreach($obj->getRoleNames() as $role)
-                                <div class="form-group col-md-4">
-                                    <div >
-                                        <label ><i class="fas fa-check-square text-info"></i> {{$role}}</label>
+                            @php
+                                $attributes = $obj->toArray();
+                                unset($attributes['id']);
+                            @endphp
+                            @foreach($attributes as $key=>$value)
+                                    <div class="form-group col-md-12">
+                                        <label for="name">{{ucwords(str_replace('_', ' ', $key))}}: </label>
+                                        <b>{!! BladeHelper::formatView($key, $value, $obj) !!}</b>
                                     </div>
-                                </div>
                             @endforeach
+
+                            @if(count($obj->gallery)>0)
+                                <div class="gallery">
+                                    <h4>Gallery</h4>
+                                    @foreach($obj->gallery as $key=>$item)
+                                        @if($item->upload_type == 'Upload')
+                                            <a href="{{ asset($item->media->file_path) }}" target="_blank">
+                                                @if($item->media->media_type == 'Image')
+                                                    <img src="{{ asset($item->media->file_path) }}?ver={{time()}}" width="200px">
+                                                @else
+                                                    <img src="{{ asset($item->video_preview_image) }}?ver={{time()}}" width="200px">
+                                                @endif
+                                            </a>
+                                        @else
+                                            <a href="{{ $item->youtube_url }}" target="_blank">
+                                                @if($item->media)
+                                                    <img src="{{ asset($item->media->file_path) }}?ver={{time()}}" width="200px">
+                                                @else
+                                                    <img src="{{ $item->youtube_preview }}?ver={{time()}}" width="200px">
+                                                @endif
+                                            </a>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @endif
+                            @if(count($obj->faq))
+                                <div class="faq w-100">
+                                    <h4>FAQ</h4>
+                                    @include('admin._partials.faq', ['faq' => $obj->faq])
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

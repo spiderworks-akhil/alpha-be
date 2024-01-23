@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\BaseController as Controller;
+use App\Http\Requests\Admin\CategoryRequest;
 use App\Traits\ResourceTrait;
-
 use App\Models\Category;
-
 use Illuminate\Http\Request;
-use View, Redirect;
+use View;
 
 class CategoryController extends Controller
 {
@@ -40,7 +39,7 @@ class CategoryController extends Controller
             if($parent)
                 $parent_data = $this->model->find($parent);
             $search_settings = $this->getSearchSettings();
-            return view::make($this->views . '.index', array('parent'=>$parent, 'parent_data'=>$parent_data, 'search_settings'=>$search_settings));
+            return View::make($this->views . '.index', array('parent'=>$parent, 'parent_data'=>$parent_data, 'search_settings'=>$search_settings));
         }
     }
     
@@ -58,14 +57,19 @@ class CategoryController extends Controller
                 return '<a href="' . route( $route . '.index',  [$obj->id] ) . '" class="btn btn-info btn-sm" >Sub-Categories (' . $has_child . ')</a>'; 
             })
             ->addColumn('action_delete_category', function($obj) use ($route) { 
-                $has_child = $this->model->where('parent_id', '=', $obj->id)->count();
-                if($has_child)
+                if(auth()->user()->can($this->permissions['delete']))
                 {
-                    return '<a href="javascript:void(0);" class= "text-danger delete_have_child" title="Created at : ' . date('d/m/Y - h:i a', strtotime($obj->created_at)) . '" > <i class="fa fa-trash"></i></button>';
+                    $has_child = $this->model->where('parent_id', '=', $obj->id)->count();
+                    if($has_child)
+                    {
+                        return '<a href="javascript:void(0);" class= "text-danger delete_have_child" title="Created at : ' . date('d/m/Y - h:i a', strtotime($obj->created_at)) . '" > <i class="fa fa-trash"></i></button>';
+                    }
+                    else{
+                        return '<a href="' . route( $route . '.destroy',  [$obj->id] ) . '" class="text-danger webadmin-btn-warning-popup" data-message="Are you sure to delete?  Associated data will be removed if it is deleted." title="' . ($obj->updated_at ? 'Last updated at : ' . date('d/m/Y - h:i a', strtotime($obj->updated_at)) : '') . '" ><i class="fa fa-trash"></i></a>';  
+                    }
                 }
-                else{
-                     return '<a href="' . route( $route . '.destroy',  [$obj->id] ) . '" class="text-danger webadmin-btn-warning-popup" data-message="Are you sure to delete?  Associated data will be removed if it is deleted." title="' . ($obj->updated_at ? 'Last updated at : ' . date('d/m/Y - h:i a', strtotime($obj->updated_at)) : '') . '" ><i class="fa fa-trash"></i></a>';  
-                }
+                else
+                    return '<a href="javascript:void(0)" class="text-secondary" title="You have no permission to delete" ><i class="fa fa-trash"></i></a>';
             })
             ->rawColumns(['action_edit', 'action_delete_category', 'status', 'sub-categories']);
     }
@@ -76,7 +80,7 @@ class CategoryController extends Controller
         if($parent)
             $parent_data = $this->model->find($parent);
         $categories = $this->model->where('parent_id',0)->get();
-        return view::make($this->views . '.form', array('obj'=>$this->model, 'parent'=>$parent, 'parent_data'=>$parent_data, 'categories'=>$categories));
+        return View::make($this->views . '.form', array('obj'=>$this->model, 'parent'=>$parent, 'parent_data'=>$parent_data, 'categories'=>$categories));
     }
 
     public function edit($id) {
@@ -91,5 +95,18 @@ class CategoryController extends Controller
         } else {
             return $this->redirect('notfound');
         }
+    }
+
+    public function store(CategoryRequest $request)
+    {
+        $request->validated();
+        return $this->_store($request->all());
+    }
+
+    public function update(CategoryRequest $request)
+    {
+        $request->validated();
+        $id = decrypt($request->id);
+        return $this->_update($id, $request->all());
     }
 }

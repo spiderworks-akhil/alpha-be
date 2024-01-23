@@ -180,7 +180,11 @@
                                                         @fieldshow(blogs-published_by)
                                                         <div class="form-group col-md-12">
                                                             <label>Published By</label>
-                                                            <input type="text" name="published_by" class="form-control" value="{{$obj->published_by}}">
+                                                            <select name="published_by_author_id" class="w-100 webadmin-select2-input" data-select2-url="{{route('admin.select2.authors')}}" data-placeholder="Select Author">
+                                                                @if($obj->id && $obj->author)
+                                                                    <option value="{{$obj->author->id}}" selected="selected">{{$obj->author->name}}</option>
+                                                                @endif
+                                                            </select>
                                                         </div>
                                                         @endfieldshow
                                                         <div class="form-group w-100  mb-2">
@@ -260,15 +264,12 @@
                                                 <div class="card-body">
                                                     <div class="form-group col-md-12">
                                                         <label class="">Tags</label>
-                                                        @php
-                                                            $selected_tags = [];
-                                                            if($obj->id && count($obj->tags))
-                                                                $selected_tags = $obj->tags->pluck('id')->toArray();
-                                                        @endphp
-                                                        <select name="tags[]" class="w-100 webadmin-select2-input" data-placeholder="Select Tags" multiple>
-                                                            @foreach($tags as $tag)
-                                                                <option value="{{$tag->id}}" @if(in_array($tag->id, $selected_tags)) selected="selected" @endif>{{$tag->name}}</option>
-                                                            @endforeach
+                                                        <select name="tags[]" class="w-100 webadmin-select2-input" data-select2-url="{{route('admin.select2.tags')}}" data-placeholder="Select Tags" multiple>
+                                                            @if($obj->id && count($obj->tags))
+                                                                @foreach($obj->tags as $tag)
+                                                                    <option value="{{$tag->id}}" selected="selected">{{$tag->name}}</option>
+                                                                @endforeach
+                                                            @endif
                                                         </select>
                                                     </div>
                                                 </div>
@@ -286,18 +287,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            @endfieldshow
-                                            @fieldshow(blogs-faq)
-                                                @if($obj->id)
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        FAQ
-                                                    </div>
-                                                    <div class="card-body text-center">
-                                                        <a href="{{route('admin.faq.index', [$obj->id, 'Blog'])}}" class="webadmin-open-ajax-popup btn btn-sm btn-warning" title="SET FAQ" data-popup-size="large">@if(count($obj->faq)>0) Update FAQ @else Add FAQ @endif</a>
-                                                    </div>
-                                                </div>
-                                                @endif
                                             @endfieldshow
                                             @fieldshow(blogs-featured_image_id)
                                             <div class="card">
