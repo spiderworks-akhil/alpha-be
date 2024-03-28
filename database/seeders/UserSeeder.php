@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
     {
         DB::table('admins')->insert([
             'name' => 'Super Admin',
-            'email' => 'sobha@spiderworks.in',
+            'email' => 'supal@spiderworks.in',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
