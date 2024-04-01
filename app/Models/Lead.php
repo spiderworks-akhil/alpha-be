@@ -41,9 +41,9 @@ class Lead extends Model
         return $this->parent_validate($data);
     }
 
-    public function updated_user()
-    {
-        return $this->belongsTo('App\Models\User', 'updated_by');
-    }
+    // public function updated_user()
+    // {
+    //     return $this->belongsTo('App\Models\User', 'updated_by');
+    // }
 
 }

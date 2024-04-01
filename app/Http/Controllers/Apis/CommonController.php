@@ -12,6 +12,8 @@ use App\Models\Lead;
 use App\Http\Requests\ContactRequest;
 use App\Http\Resources\CommonPageResource;
 use App\Http\Resources\FaqCollection;
+use App\Http\Resources\LeadCollection;
+use App\Http\Resources\Lead as LeadResource;
 use App\Models\Faq;
 use App\Models\Page;
 use DB;
@@ -94,6 +96,32 @@ class CommonController extends Controller
         }
         $faqs = $faqs->paginate($limit);
         return new FaqCollection($faqs);
+        
+    }
+
+    public function leads(Request $request){
+
+        $limit = ($request->limit)?$request->limit:12;
+        $leads = Lead::where('status', 1);
+        
+        if($search = $request->search){
+            $leads->where(function($query) use($search){
+                $query->whereRaw("MATCH (name) AGAINST ('{$search}')")->orWhereRaw("MATCH (email) AGAINST ('{$search}')")->orWhere('phone_number', 'LIKE', '%'.$search.'%')->orWhere('created_at', 'LIKE', '%'.$search.'%');
+            });
+        }
+        $leads = $leads->paginate($limit);
+
+        return new LeadCollection($leads);
+        
+    }
+    public function leads_view($id){
+
+        $lead = Lead::where('status', 1)->find($id);
+        
+        if (!$lead)
+            return response()->json(['error' => 'Page not Found!'], 404);
+
+        return new LeadResource($lead);
         
     }
 }
