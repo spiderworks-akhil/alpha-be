@@ -58,7 +58,6 @@ class PermissionController extends Controller
         }
     }
 
-
     public function store(Reqst $r)
     {
         $data = $r->all();

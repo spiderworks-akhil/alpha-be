@@ -20,6 +20,7 @@ class TestimonialController extends Controller
         $this->views .= '.testimonials';
         
         $this->permissions = ['list'=>'testimonial_listing', 'create'=>'testimonial_adding', 'edit'=>'testimonial_editing', 'delete'=>'testimonial_deleting'];
+        
         $this->resourceConstruct();
 
     }

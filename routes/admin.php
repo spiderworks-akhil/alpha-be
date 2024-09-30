@@ -34,6 +34,9 @@ use App\Http\Controllers\Admin\Auth\AuthenticateSessionOtpController;
 use App\Http\Controllers\Admin\AuthorController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\AttributeController;
+
 
 $prefix = (config()->has('admin.url_prefix'))?config()->get('admin.url_prefix'):'admin';
 $middleware = (config()->has('admin.admin_middleware'))?config()->get('admin.admin_middleware'):'auth';
@@ -383,6 +386,31 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::post('partners/store', [PartnerController::class, 'store'])->name('admin.partners.store');
         Route::post('partners/update', [PartnerController::class, 'update'])->name('admin.partners.update');
         Route::get('partners/show/{id}', [PartnerController::class, 'show'])->name('admin.partners.show');
+
+        //products
+        Route::get('products', [ProductController::class, 'index'])->name('admin.products.index');
+        Route::get('products/create', [ProductController::class, 'create'])->name('admin.products.create');
+        Route::get('products/edit/{id}', [ProductController::class, 'edit'])->name('admin.products.edit');
+        Route::get('products/destroy/{id}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
+        Route::get('products/change-status/{id}', [ProductController::class, 'changeStatus'])->name('admin.products.change-status');
+        Route::post('products/store', [ProductController::class, 'store'])->name('admin.products.store');
+        Route::post('products/update', [ProductController::class, 'update'])->name('admin.products.update');
+        Route::get('products/show/{id}', [ProductController::class, 'show'])->name('admin.products.show');
+        Route::post('attribute/create', [ProductController::class, 'CreateAttribute'])->name('admin.attribute.create');
+        // Route::get('attribute-values', [ProductController::class, 'CreateAttributeValue'])->name('admin.attribute-values.index');
+        Route::post('attribute-values/store', [ProductController::class, 'StoreAttributeValue'])->name('admin.attribute-values.store');
+
+         //attribute values
+         Route::post('attribute-values/update', [AttributeController::class, 'update'])->name('admin.attribute-values.update');
+         Route::get('attribute-values/create/{id?}', [AttributeController::class, 'create'])->name('admin.attribute-values.create');
+         Route::get('attribute-values/edit/{id}', [AttributeController::class, 'edit'])->name('admin.attribute-values.edit');
+         Route::get('attribute-values/destroy/{id}', [AttributeController::class, 'destroy'])->name('admin.attribute-values.destroy');
+         Route::get('attribute-values/change-status/{id}', [AttributeController::class, 'changeStatus'])->name('admin.attribute-values.change-status');
+         Route::post('attribute-values/store', [AttributeController::class, 'store'])->name('admin.attribute-values.store');
+         Route::get('attribute-values/{id?}', [AttributeController::class, 'index'])->name('admin.attribute-values.index');
+         Route::get('attribute-values/show/{id}', [AttributeController::class, 'show'])->name('admin.attribute-values.show');
+         Route::post('add-attribute-value-image/store', [AttributeController::class, 'AddAttributeValueImages'])->name('admin.attribute-value-image.store');
+
 
         //job applications
         Route::get('job-applications', [JobApplicationController::class, 'index'])->name('admin.job-applications.index');

@@ -11,6 +11,7 @@ use App\Http\Controllers\Apis\JobController;
 use App\Http\Controllers\Apis\ServiceController;
 use App\Http\Controllers\Apis\TeamController;
 use App\Http\Controllers\Apis\PartnerController;
+use App\Http\Controllers\Apis\ProductController;
 
 
 /*
@@ -69,3 +70,10 @@ Route::get('leads/{id}', [CommonController::class, 'leads_view'])->name('api.lea
 Route::get('list-urls/{page}', [CommonController::class, 'list_urls'])->name('api.list-urls');
 
 Route::post('contact/save', [CommonController::class, 'contact_save'])->name('contacts.save');
+
+
+// products
+Route::get('product', [ProductController::class, 'index'])->name('api.product.index');
+Route::get('product/{slug}', [ProductController::class, 'view'])->name('api.product.view');
+Route::get('product/images/{id}', [ProductController::class, 'ProductImages'])->name('api.product.images');
+

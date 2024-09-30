@@ -15,11 +15,11 @@ class Media extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'file_name' => $this->file_name,
+            // 'file_name' => $this->file_name,
             'file_path' => asset($this->file_path),
-            'file_type' => $this->file_type,
-            'file_size' => $this->file_size,
-            'media_type' => $this->media_type,
+            // 'file_type' => $this->file_type,
+            // 'file_size' => $this->file_size,
+            // 'media_type' => $this->media_type,
             'alt_text' => $this->alt_text
         ];
     }

@@ -80,6 +80,7 @@ class ServiceController extends Controller
             $parent_data = $this->model->find($parent);
         $services = $this->model->where('parent_id',0)->get();
         return View::make($this->views . '.form', array('obj'=>$this->model, 'parent'=>$parent, 'parent_data'=>$parent_data, 'services'=>$services));
+
     }
 
     public function store(ServiceRequest $request)
