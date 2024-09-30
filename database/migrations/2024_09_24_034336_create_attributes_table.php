@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('product_id')->default(0);
-            $table->string('slug')->unique();
             $table->string('name');
             $table->integer('priority')->default(0);
             $table->boolean('status')->default(1);
