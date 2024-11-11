@@ -11,7 +11,7 @@ class BaseController extends Controller {
 
     /**
      * Create a new controller instance.
-     *
+     *  
      * @return void
      */
     public function __construct()
@@ -102,28 +102,55 @@ class BaseController extends Controller {
                 $fileName = $file_update_parts['filename'].'.'.$file_ext;
             }
 
-            if(!FileInput::isDirectory($destinationPath)) {
-                // path does not exist
-                FileInput::makeDirectory($destinationPath, 0755, true);
-            }
-            $success = false;
-            $this->delete_if_exist($filePath, $fileName);
-            if($file->move($destinationPath, $fileName))
-                $success = true;
-            
-            if($success)
-            {
-                $result['filename'] = $fileName;
-                $result['filepath'] = $filePath . $fileName;
-                $result['filesize'] = $fileSize;
-                $result['filedimensions'] = $fileDimensions;
-                $result['mediatype'] = $type;
-                $result['mediathumb'] = $thumb_image;
-                $result['filetype'] = $fileType;
-                $result['success'] = true;
-            }
-            else
-                $result['error'] = 'Something wrong happend, please try again.';
+             //check flag 
+             $flag = env('FLAG');
+
+             if ($flag === 'AWS') {
+              
+                 $path = 'uploads/' . $fileName     ;
+                 $fileContent = file_get_contents($file);
+     
+                 $success = \Storage::disk('s3')->put($path, $fileContent);
+     
+                 if ($success) {
+ 
+                     $result['filename'] = $fileName;
+                     $result['filepath'] = \Storage::disk('s3')->url($path);
+                     $result['filesize'] = $fileSize;
+                     $result['filedimensions'] = $fileDimensions;
+                     $result['mediatype'] = $type;
+                     $result['mediathumb'] = $thumb_image;
+                     $result['filetype'] = $fileType;
+                     $result['success'] = true;
+                 } else {
+                     $result['error'] = 'Failed to upload file to AWS S3.';
+                 }
+                 
+             } else {
+ 
+                 if(!FileInput::isDirectory($destinationPath)) {
+                     // path does not exist
+                     FileInput::makeDirectory($destinationPath, 0755, true);
+                 }
+                 $success = false;
+                 $this->delete_if_exist($filePath, $fileName);
+                 if($file->move($destinationPath, $fileName))
+                     $success = true;
+                 
+                 if($success)
+                 {
+                     $result['filename'] = $fileName;
+                     $result['filepath'] = $filePath . $fileName;
+                     $result['filesize'] = $fileSize;
+                     $result['filedimensions'] = $fileDimensions;
+                     $result['mediatype'] = $type;
+                     $result['mediathumb'] = $thumb_image;
+                     $result['filetype'] = $fileType;
+                     $result['success'] = true;
+                 }
+                 else
+                     $result['error'] = 'Something wrong happend, please try again.';
+             }
         } else {
             $result['error'] = 'No file selected or Invalid file.';         
         }

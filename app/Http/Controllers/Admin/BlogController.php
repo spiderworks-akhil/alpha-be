@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\BaseController as Controller;
 use App\Http\Requests\Admin\BlogRequest;
-use App\Traits\ResourceTrait;
-
 use App\Models\Blog;
+
 use App\Models\Category;
 use App\Models\Tag;
+use App\Traits\ResourceTrait;
+use Illuminate\Http\Request;
 use view, Redirect;
 
 class BlogController extends Controller
@@ -26,6 +27,22 @@ class BlogController extends Controller
         $this->permissions = ['list'=>'blog_listing', 'create'=>'blog_adding', 'edit'=>'blog_editing', 'delete'=>'blog_deleting'];
         $this->resourceConstruct();
 
+    }
+
+    public function storeImage(Request $request)
+    {
+        if ($request->has('image')) {
+
+            $file = $request->file('image');            
+            $path = "/uploads/".time().$file->getClientOriginalName();
+            \Storage::disk("s3")->put($path, file_get_contents($file));
+
+            return response()->json(['path' => $path]);
+
+        } else {
+            return response()->json(['error' => 'No file uploaded.'], 400);
+        }
+       
     }
     
     protected function getCollection() {

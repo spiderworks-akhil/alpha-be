@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
@@ -9,4 +9,11 @@
     <body class="antialiased">
         
     </body>
-</html>
+</html> --}}
+
+
+<form action="{{ route('images.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <input type="file" name="image" required>
+    <button type="submit">Upload</button>
+</form> 

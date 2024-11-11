@@ -63,6 +63,10 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::get('change-password', array('as' => 'admin.change-password', function(){
             return View::make('admin.change_password');
         }));
+
+        
+        Route::post('images', [BlogController::class, 'storeImage'])->name('images.store');
+
         Route::post('/changePassword', [WebadminController::class, 'changePassword'])->name('admin.update-password');
         
         Route::get('/validation/roles', [WebadminController::class, 'unique_roles'])->name('admin.validation.roles');
