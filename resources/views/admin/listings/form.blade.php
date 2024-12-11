@@ -26,6 +26,25 @@
                 <option value="Yes" @if($obj->short_description == "Yes") selected="selected" @endif>Yes</option>
               </select>
           </div>
+
+
+
+        .   <div class="form-group col-md-6">
+            <label for="name">Button name</label>
+            <select class="form-control" name="button_name">
+              <option value="No" @if($obj->button_name == "No") selected="selected" @endif >No</option>
+              <option value="Yes" @if($obj->button_name == "Yes") selected="selected" @endif>Yes</option>
+            </select>
+        </div>
+
+
+        .   <div class="form-group col-md-6">
+            <label for="name">Button name</label>
+            <select class="form-control" name="button_url">
+              <option value="No" @if($obj->button_url == "No") selected="selected" @endif >No</option>
+              <option value="Yes" @if($obj->button_url == "Yes") selected="selected" @endif>Yes</option>
+            </select>
+        </div>
           <div class="form-group col-md-6">
               <label for="name">Detailed Description</label>
               <select class="form-control" name="detailed_description">

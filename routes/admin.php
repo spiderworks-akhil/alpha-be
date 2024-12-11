@@ -1,42 +1,43 @@
 <?php
-use App\Http\Controllers\Admin\WebadminController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\AdminLinkController;
-use App\Http\Controllers\Admin\MediaController;
-use App\Http\Controllers\Admin\BlogController;
-use App\Http\Controllers\Admin\MenuController;
-use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\FaqController;
-use App\Http\Controllers\Admin\TestimonialController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\LogController;
-use App\Http\Controllers\Admin\StaticPageController;
-use App\Http\Controllers\Admin\PageController;
-use App\Http\Controllers\Admin\PhotoGallaryController;
-use App\Http\Controllers\Admin\TeamController;
-use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\JobController;
-use App\Http\Controllers\Admin\LeadController;
-use App\Http\Controllers\Admin\RedirectController;
-use App\Http\Controllers\Admin\QuickTaskController;
-use App\Http\Controllers\Admin\ProjectController;
-use App\Http\Controllers\Admin\LoginHistoryController;
-use App\Http\Controllers\Admin\CommentController;
-use App\Http\Controllers\Admin\EventController;
-use App\Http\Controllers\Admin\PartnerController;
-use App\Http\Controllers\Admin\JobApplicationController;
-use App\Http\Controllers\Admin\ListingController;
-use App\Http\Controllers\Admin\ListigItemController;
-use App\Http\Controllers\Admin\Auth\AuthenticateSessionOtpController;
-use App\Http\Controllers\Admin\AuthorController;
+use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\LeadController;
+use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\TeamController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\AuthorController;
+use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\ListingController;
+use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\RedirectController;
+use App\Http\Controllers\Admin\WebadminController;
+use App\Http\Controllers\Admin\AdminLinkController;
 use App\Http\Controllers\Admin\AttributeController;
-
+use App\Http\Controllers\Admin\QuickTaskController;
+use App\Http\Controllers\Admin\ListigItemController;
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\StaticPageController;
+use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Admin\LoginHistoryController;
+use App\Http\Controllers\Admin\PhotoGallaryController;
+use App\Http\Controllers\Admin\JobApplicationController;
+use App\Http\Controllers\Admin\Auth\AuthenticateSessionOtpController;
+use App\Http\Controllers\Admin\TopRankerController;
 
 $prefix = (config()->has('admin.url_prefix'))?config()->get('admin.url_prefix'):'admin';
 $middleware = (config()->has('admin.admin_middleware'))?config()->get('admin.admin_middleware'):'auth';
@@ -45,7 +46,7 @@ Route::post('google/auth', [WebadminController::class, 'google_login'])->name('g
 
 Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($middleware) {
 
-    
+
     Route::post('/request-otp', [AuthenticateSessionOtpController::class, 'request_otp'])->name('admin.auth.request-otp');
     Route::post('/validate-otp', [AuthenticateSessionOtpController::class, 'validate_otp'])->name('admin.auth.validate-otp');
     Route::get('/resend-otp/{id}', [AuthenticateSessionOtpController::class, 'resend_otp'])->name('admin.auth.resend-otp');
@@ -64,18 +65,18 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
             return View::make('admin.change_password');
         }));
 
-        
+
         Route::post('images', [BlogController::class, 'storeImage'])->name('images.store');
 
         Route::post('/changePassword', [WebadminController::class, 'changePassword'])->name('admin.update-password');
-        
+
         Route::get('/validation/roles', [WebadminController::class, 'unique_roles'])->name('admin.validation.roles');
         Route::get('/validation/users', [WebadminController::class, 'unique_users'])->name('admin.validation.users');
 
         //widgets
         Route::get('/widgets', [WebadminController::class, 'widgets'])->name('admin.widgets.index');
         Route::post('/widgets/save', [WebadminController::class, 'save_widget'])->name('admin.widgets.save');
-        
+
         //users
         Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('admin.users.edit');
         Route::get('/users/show/{id}', [UserController::class, 'show'])->name('admin.users.show');
@@ -182,7 +183,7 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::get('testimonials', [TestimonialController::class, 'index'])->name('admin.testimonials.index');
         Route::get('testimonials/create', [TestimonialController::class, 'create'])->name('admin.testimonials.create');
         Route::get('testimonials/edit/{id}', [TestimonialController::class, 'edit'])->name('admin.testimonials.edit');
-        Route::get('testimonials/destroy/{id}', [TestimonialController::class, 'destroy'])->name('admin.testimonials.destroy');    
+        Route::get('testimonials/destroy/{id}', [TestimonialController::class, 'destroy'])->name('admin.testimonials.destroy');
         Route::post('testimonials/store', [TestimonialController::class, 'store'])->name('admin.testimonials.store');
         Route::post('testimonials/update', [TestimonialController::class, 'update'])->name('admin.testimonials.update');
         Route::get('testimonials/change-status/{id}', [TestimonialController::class, 'changeStatus'])->name('admin.testimonials.change-status');
@@ -202,6 +203,31 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::get('settings', [SettingController::class, 'index'])->name('admin.settings.index');
         Route::post('/settings/store', [SettingController::class, 'store'])->name('admin.settings.store');
 
+
+        // //courses
+
+        Route::get('courses', [CourseController::class, 'index'])->name('admin.courses.index');
+        Route::get('courses/create', [CourseController::class, 'create'])->name('admin.courses.create');
+        Route::get('courses/edit/{id}', [CourseController::class, 'edit'])->name('admin.courses.edit');
+        Route::get('courses/destroy/{id}', [CourseController::class, 'destroy'])->name('admin.courses.destroy');
+        Route::get('courses/change-status/{id}', [CourseController::class, 'changeStatus'])->name('admin.courses.change-status');
+        Route::post('courses/store', [CourseController::class, 'store'])->name('admin.courses.store');
+        Route::post('courses/update', [CourseController::class, 'update'])->name('admin.courses.update');
+        Route::get('courses/show/{id}', [CourseController::class, 'show'])->name('admin.courses.show');
+
+
+        //Top Rankers
+        Route::get('top-ranker', [TopRankerController::class, 'index'])->name('admin.top-rankers.index');
+        Route::get('top-ranker/create', [TopRankerController::class, 'create'])->name('admin.top-rankers.create');
+        Route::get('top-ranker/edit/{id}', [TopRankerController::class, 'edit'])->name('admin.top-rankers.edit');
+        Route::get('top-ranker/destroy/{id}', [TopRankerController::class, 'destroy'])->name('admin.top-rankers.destroy');
+        Route::get('top-ranker/change-status/{id}', [TopRankerController::class, 'changeStatus'])->name('admin.top-rankers.change-status');
+        Route::post('top-ranker/store', [TopRankerController::class, 'store'])->name('admin.top-rankers.store');
+        Route::post('top-ranker/update', [TopRankerController::class, 'update'])->name('admin.top-rankers.update');
+        Route::get('top-ranker/show/{id}', [TopRankerController::class, 'show'])->name('admin.top-rankers.show');
+
+
+
         //user_activities
         Route::get('logs', [LogController::class, 'index'])->name('admin.logs.index');
         Route::get('logs/create', function(){
@@ -210,7 +236,7 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::get('logs/edit/{id}', function(){
             echo "No access permission";exit;
         })->name('admin.logs.edit');
-        Route::get('logs/destroy/{id}', [LogController::class, 'destroy'])->name('admin.logs.destroy');    
+        Route::get('logs/destroy/{id}', [LogController::class, 'destroy'])->name('admin.logs.destroy');
         Route::post('logs/store', function(){
             echo "No access permission";exit;
         })->name('admin.logs.store');
@@ -289,7 +315,7 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
             echo "Not possible";exit;
         })->name('admin.leads.create');
         Route::get('leads/edit/{id}', [LeadController::class, 'edit'])->name('admin.leads.edit');
-        Route::get('leads/destroy/{id}', [LeadController::class, 'destroy'])->name('admin.leads.destroy');    
+        Route::get('leads/destroy/{id}', [LeadController::class, 'destroy'])->name('admin.leads.destroy');
         Route::post('leads/store', function(){
             echo "Not possible";exit;
         })->name('admin.leads.store');
@@ -344,7 +370,7 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::get('login-history/edit/{id}', function(){
             echo "Not possible";exit;
         })->name('admin.login-history.edit');
-        Route::get('login-history/destroy/{id}', [LoginHistoryController::class, 'destroy'])->name('admin.login-history.destroy');    
+        Route::get('login-history/destroy/{id}', [LoginHistoryController::class, 'destroy'])->name('admin.login-history.destroy');
         Route::post('login-history/store', function(){
             echo "Not possible";exit;
         })->name('admin.login-history.store');
@@ -422,7 +448,7 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
             echo "Not possible";exit;
         })->name('admin.job-applications.create');
         Route::get('job-applications/edit/{id}', [JobApplicationController::class, 'edit'])->name('admin.job-applications.edit');
-        Route::get('job-applications/destroy/{id}', [JobApplicationController::class, 'destroy'])->name('admin.job-applications.destroy');    
+        Route::get('job-applications/destroy/{id}', [JobApplicationController::class, 'destroy'])->name('admin.job-applications.destroy');
         Route::post('job-applications/store', function(){
             echo "Not possible";exit;
         })->name('admin.job-applications.store');
@@ -435,7 +461,7 @@ Route::group(['prefix' => $prefix, 'middleware' => ['web']], function () use($mi
         Route::get('listings', [ListingController::class, 'index'])->name('admin.listings.index');
         Route::get('listings/create', [ListingController::class, 'create'])->name('admin.listings.create');
         Route::get('listings/edit/{id}', [ListingController::class, 'edit'])->name('admin.listings.edit');
-        Route::get('listings/destroy/{id}', [ListingController::class, 'destroy'])->name('admin.listings.destroy');    
+        Route::get('listings/destroy/{id}', [ListingController::class, 'destroy'])->name('admin.listings.destroy');
         Route::post('listings/store', [ListingController::class, 'store'])->name('admin.listings.store');
         Route::post('listings/update', [ListingController::class, 'update'])->name('admin.listings.update');
         Route::get('listings/change-status/{id}', [ListingController::class, 'changeStatus'])->name('admin.listings.change-status');

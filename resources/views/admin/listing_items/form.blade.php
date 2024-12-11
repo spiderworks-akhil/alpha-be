@@ -14,18 +14,18 @@
 
 @section('content')
 <!-- Top Bar Start -->
-            <div class="topbar">            
+            <div class="topbar">
                 <!-- Navbar -->
-                <nav class="navbar-custom">    
+                <nav class="navbar-custom">
                     @include('admin._partials.profile_menu')
-        
-                    <ul class="list-unstyled topbar-nav mb-0">                        
+
+                    <ul class="list-unstyled topbar-nav mb-0">
                         <li>
                             <button class="nav-link button-menu-mobile">
                                 <i data-feather="menu" class="align-self-center topbar-icon"></i>
                             </button>
-                        </li> 
-                          
+                        </li>
+
                     </ul>
                 </nav>
                 <!-- end navbar-->
@@ -58,12 +58,12 @@
                                         <a class=" btn btn-sm btn-primary" href="{{route($route.'.create', [$listing->id])}}" role="button"><i class="fas fa-plus mr-2"></i>Create New</a>
                                     </div>
                                     @endif
-                                </div><!--end row-->                                                              
+                                </div><!--end row-->
                             </div><!--end page-title-box-->
                         </div><!--end col-->
                     </div><!--end row-->
                     <!-- end page title end breadcrumb -->
-                    
+
                     <div class="row">
                         <div class="col-lg-12">
                             @include('admin._partials.notifications')
@@ -108,6 +108,21 @@
                                                                 <textarea class="form-control" name="short_description">{{$obj->short_description}}</textarea>
                                                             </div>
                                                             @endif
+
+
+                                                            @if($listing->button_name == "Yes")
+                                                            <div class="form-group col-md-12">
+                                                                <label>Button name</label>
+                                                                <input type="text" name="button_name" class="form-control" value="{{$obj->button_name}}">
+                                                            </div>
+                                                            @endif
+
+                                                            @if($listing->button_url == "Yes")
+                                                            <div class="form-group col-md-12">
+                                                                <label>Button url</label>
+                                                                <input type="text" name="button_url" class="form-control" value="{{$obj->button_url}}">
+                                                            </div>
+                                                            @endif
                                                             @if($listing->detailed_description == "Yes")
                                                             <div class="form-group col-md-12">
                                                                 <label>Detailed Description</label>
@@ -115,7 +130,7 @@
                                                             </div>
                                                             @endif
                                                         </div>
-                                                    </div>                                           
+                                                    </div>
                                                 </div><!--end card-body-->
                                             </div><!--end card-->
                                         </div>
@@ -182,9 +197,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>    
+                                        </div>
                                     </div>
-                            </form> 
+                            </form>
                         </div><!--end col-->
                     </div><!--end row-->
 

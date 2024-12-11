@@ -14,6 +14,7 @@ use App\Http\Resources\CommonPageResource;
 use App\Http\Resources\FaqCollection;
 use App\Http\Resources\LeadCollection;
 use App\Http\Resources\Lead as LeadResource;
+use App\Models\Course;
 use App\Models\Faq;
 use App\Models\Page;
 use DB;
@@ -58,12 +59,12 @@ class CommonController extends Controller
         {
             $mail = new MailSettings;
             $email_array = explode(',', $notif_emails->value_text);
-            array_filter($email_array, function($value){ 
+            array_filter($email_array, function($value){
                 return !is_null($value) && $value !== '';
             });
             $email_array = array_map('trim', $email_array);
             $mail->to($email_array)->send(new \App\Mail\Contact($contact));
-        } 
+        }
         if($contact->email){
                 $thank_mail = new MailSettings;
                 $thank_mail->to($contact->email)->send(new \App\Mail\ContactThankyou($contact));
@@ -96,14 +97,14 @@ class CommonController extends Controller
         }
         $faqs = $faqs->paginate($limit);
         return new FaqCollection($faqs);
-        
+
     }
 
     public function leads(Request $request){
 
         $limit = ($request->limit)?$request->limit:12;
         $leads = Lead::where('status', 1);
-        
+
         if($search = $request->search){
             $leads->where(function($query) use($search){
                 $query->whereRaw("MATCH (name) AGAINST ('{$search}')")->orWhereRaw("MATCH (email) AGAINST ('{$search}')")->orWhere('phone_number', 'LIKE', '%'.$search.'%')->orWhere('created_at', 'LIKE', '%'.$search.'%');
@@ -112,16 +113,20 @@ class CommonController extends Controller
         $leads = $leads->paginate($limit);
 
         return new LeadCollection($leads);
-        
+
     }
     public function leads_view($id){
 
         $lead = Lead::where('status', 1)->find($id);
-        
+
         if (!$lead)
             return response()->json(['error' => 'Page not Found!'], 404);
 
         return new LeadResource($lead);
-        
+
     }
+
+
+
+
 }

@@ -20,7 +20,7 @@ class BladeServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        
+
         Blade::directive('fieldshow', function ($input) {
             $input = explode('-', $input);
             $page = $input[0];

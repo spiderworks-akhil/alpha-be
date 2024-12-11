@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Traits;
 
@@ -71,7 +71,7 @@ trait ResourceTrait {
                     if($obj->status == 1)
                     {
                         if(auth()->user()->can($this->permissions['edit']))
-                            return '<a href="' . route($route.'.change-status', [encrypt($obj->id)]).'" class="webadmin-btn-warning-popup" data-message="Are you sure, want to disable this record?"><i class="h5 text-success fa fa-check-circle"></i></a>'; 
+                            return '<a href="' . route($route.'.change-status', [encrypt($obj->id)]).'" class="webadmin-btn-warning-popup" data-message="Are you sure, want to disable this record?"><i class="h5 text-success fa fa-check-circle"></i></a>';
                         else
                             return '<i class="h5 text-success fa fa-check-circle"></i>';
                     }
@@ -86,7 +86,7 @@ trait ResourceTrait {
                     return "";
             })
             ->addColumn('action_edit', function($obj) use ($route) {
-                if(Route::has($route.'.edit') || Route::has($route.'.show')){ 
+                if(Route::has($route.'.edit') || Route::has($route.'.show')){
                     if(auth()->user()->can($this->permissions['edit']))
                         return '<a href="'.route($route.'.edit', [encrypt($obj->id)]).'" class="text-info" title="' . ($obj->updated_at ? 'Last updated at : ' . date('d/m/Y - h:i a', strtotime($obj->updated_at)) : ''). '" ><i class="fa fa-pencil-alt"></i></a>';
                     else
@@ -144,6 +144,7 @@ trait ResourceTrait {
     public function store(HttpRequest $request)
     {
         $data = $request->all();
+      
     	$this->model->validate($data);
         return $this->_store($data);
     }
@@ -152,7 +153,7 @@ trait ResourceTrait {
 	{
         $data['is_featured'] = isset($data['is_featured'])?1:0;
         $data['priority'] = (!empty($data['priority']))?$data['priority']:0;
-            
+
 		$this->model->fill($data);
 		$this->model->save();
 		return $this->redirect('created', 'success', 'edit', [encrypt($this->model->id)]);
@@ -199,7 +200,7 @@ trait ResourceTrait {
         }
         return $this->redirect('notfound');
     }
-    
+
     public function destroy($id) {
         $id = decrypt($id);
         $obj = $this->model->find($id);
@@ -207,7 +208,7 @@ trait ResourceTrait {
             $obj->delete();
             return $this->redirect('removed','success', 'index');
         }
-        
+
         return $this->redirect('notfound');
     }
 
@@ -221,7 +222,7 @@ trait ResourceTrait {
         if($type == 'success')
         {
             $message = '';
-            
+
             if($op =='created')
                 $message = 'created';
             elseif($op =='removed')
@@ -280,7 +281,7 @@ trait ResourceTrait {
                 }
             }
         }
-            
+
         return $collection;
     }
 

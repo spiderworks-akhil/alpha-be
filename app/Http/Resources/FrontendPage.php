@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -30,7 +31,18 @@ class FrontendPage extends JsonResource
             'meta_keywords' => $this->meta_keywords,
             'bottom_description' => $this->bottom_description,
             'extra_js' => $this->extra_js,
-            'faq' => new FaqCollection($this->faq)
+            'faq' => new FaqCollection($this->faq),
+            'related_section' =>$this->related_section
         ];
+
+    }
+    public function related_section($slug){
+        if($slug=='home'){
+            $page_details = FrontendPage::where('slug','home')->get();
+            $courses = Course::get();
+            dd($page_details);
+        }
+
+
     }
 }

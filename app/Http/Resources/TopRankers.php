@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ListingResource extends JsonResource
+class TopRankers extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,13 +15,12 @@ class ListingResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'meida_type' => $this->meida_type,
-            'media_id' => new Media($this->media),
-            'icon' => $this->icon,
+            'id' => $this->id,
+            'name' => $this->name,
             'title' => $this->title,
-            'description' => $this->description,
-            'button_name' => $this->button_name,
-            'button_url' => $this->button_url,
+            'designation' => $this->designation,
+            'content' => $this->content,
+            'featured_image' => new Media($this->featured_image),
         ];
     }
 }
